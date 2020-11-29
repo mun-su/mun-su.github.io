@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1.0.2/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mun-su.github.io","root":"/","scheme":"Gemini","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="해당 내용은 EC2 Scale In이며만약 Nginx, Apache 웹서버가 아닌 ELB에서 load balancing하는 경우에는Scale In - ELB를 함께 참조하세요.내용은 전반적으로 AWS Console에서만 하는 내용이 아닌 직접 서버에서 command를 사용하는 내용도 포함되어있습니다.shell에서 command를 사용하는 경우는 EC2를 임">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EC2 - Scale In">
+<meta property="og:url" content="https://mun-su.github.io/2019/04/20/dev/devops/aws/scalability/scale_in/ec2_scale_in/index.html">
+<meta property="og:site_name" content="Devlog">
+<meta property="og:description" content="해당 내용은 EC2 Scale In이며만약 Nginx, Apache 웹서버가 아닌 ELB에서 load balancing하는 경우에는Scale In - ELB를 함께 참조하세요.내용은 전반적으로 AWS Console에서만 하는 내용이 아닌 직접 서버에서 command를 사용하는 내용도 포함되어있습니다.shell에서 command를 사용하는 경우는 EC2를 임">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/1.jpg">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/2.jpg">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/3.jpg">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/4.jpg">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/5.jpg">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/6.jpg">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/7.jpg">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/8.jpg">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/9.jpg">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/10.png">
+<meta property="article:published_time" content="2019-04-20T09:37:00.000Z">
+<meta property="article:modified_time" content="2020-08-05T17:40:13.304Z">
+<meta property="article:author" content="Luke Seo">
+<meta property="article:tag" content="AWS">
+<meta property="article:tag" content="EC2">
+<meta property="article:tag" content="ScaleIn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mun-su.github.io/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/1.jpg">
+
+<link rel="canonical" href="https://mun-su.github.io/2019/04/20/dev/devops/aws/scalability/scale_in/ec2_scale_in/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>EC2 - Scale In | Devlog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130657175-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-130657175-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <main class="main">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Devlog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">58</span></a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">52</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">40</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Scale-In-EC2-Instance"><span class="nav-number">1.</span> <span class="nav-text">Scale In - EC2 Instance</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Server-Resource-%EC%A0%95%EB%A6%AC"><span class="nav-number">1.1.</span> <span class="nav-text">Server Resource 정리</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx-%EC%A2%85%EB%A3%8C"><span class="nav-number">1.1.1.</span> <span class="nav-text">Nginx 종료</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Case-Service"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">Case : Service</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Case-%ED%8A%B9%EC%A0%95-user%EC%97%90%EA%B2%8C-%EA%B6%8C%ED%95%9C-%EB%B6%80%EC%97%AC%EB%90%9C-%EA%B2%BD%EC%9A%B0"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">Case : 특정 user에게 권한 부여된 경우</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-application-%EC%A2%85%EB%A3%8C"><span class="nav-number">1.1.2.</span> <span class="nav-text">Java application 종료</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Memory-sync"><span class="nav-number">1.1.3.</span> <span class="nav-text">Memory sync</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%A4%91%EC%A7%80-%EB%98%90%EB%8A%94-%EC%A2%85%EB%A3%8C%ED%95%98%EB%A0%A4%EB%8A%94-EC2%EB%A5%BC-%EC%B0%BE%EC%95%84-%EC%9D%B4%EB%8F%99"><span class="nav-number">1.2.</span> <span class="nav-text">중지 또는 종료하려는 EC2를 찾아 이동</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%A4%91%EC%A7%80-%EB%98%90%EB%8A%94-%EC%A2%85%EB%A3%8C%ED%95%98%EB%A0%A4%EB%8A%94-EC2-%EA%B2%80%EC%83%89"><span class="nav-number">1.3.</span> <span class="nav-text">중지 또는 종료하려는 EC2 검색</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%A4%91%EC%A7%80-%EB%98%90%EB%8A%94-%EC%A2%85%EB%A3%8C%ED%95%98%EB%A0%A4%EB%8A%94-EC2-%EC%84%A0%ED%83%9D"><span class="nav-number">1.4.</span> <span class="nav-text">중지 또는 종료하려는 EC2 선택</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%84%A0%ED%83%9D%ED%95%9C-EC2%EB%A5%BC-%EC%A4%91%EC%A7%80-%EB%98%90%EB%8A%94-%EC%A2%85%EB%A3%8C"><span class="nav-number">1.5.</span> <span class="nav-text">선택한 EC2를 중지 또는 종료</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%A4%91%EC%A7%80-%EB%98%90%EB%8A%94-%EC%A2%85%EB%A3%8C"><span class="nav-number">1.6.</span> <span class="nav-text">중지 또는 종료</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%A2%85%EB%A3%8C-%EC%A7%84%ED%96%89-%EC%A4%91"><span class="nav-number">1.7.</span> <span class="nav-text">종료 진행 중</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%A2%85%EB%A3%8C-%EC%99%84%EB%A3%8C-%EB%B0%8F-%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8A%A4-%EC%97%86%EC%96%B4%EC%A7%90-%ED%99%95%EC%9D%B8"><span class="nav-number">1.8.</span> <span class="nav-text">종료 완료 및 인스턴스 없어짐 확인.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%97%B0%EA%B4%80%EB%90%9C-Jenkins-%EA%B4%80%EB%A0%A8-%EC%A0%95%EB%B3%B4-%EC%A0%9C%EA%B1%B0"><span class="nav-number">1.9.</span> <span class="nav-text">연관된 Jenkins 관련 정보 제거</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Luke Seo"
+      src="/image/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Luke Seo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mun-su" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mun-su" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </header>
+
+      
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/mun-su" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div id="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+      <div class="main-inner">
+        
+
+        <div class="content post posts-expand">
+          
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://mun-su.github.io/2019/04/20/dev/devops/aws/scalability/scale_in/ec2_scale_in/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/image/avatar.jpeg">
+      <meta itemprop="name" content="Luke Seo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Devlog">
+    </span>
+
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          EC2 - Scale In
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-04-20 18:37:00" itemprop="dateCreated datePublished" datetime="2019-04-20T18:37:00+09:00">2019-04-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-08-06 02:40:13" itemprop="dateModified" datetime="2020-08-06T02:40:13+09:00">2020-08-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/" itemprop="url" rel="index"><span itemprop="name">Dev</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/DevOps/AWS/" itemprop="url" rel="index"><span itemprop="name">AWS</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/DevOps/AWS/Scalability/" itemprop="url" rel="index"><span itemprop="name">Scalability</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/DevOps/AWS/Scalability/ScaleIn/" itemprop="url" rel="index"><span itemprop="name">ScaleIn</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2019/04/20/dev/devops/aws/scalability/scale_in/ec2_scale_in/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/04/20/dev/devops/aws/scalability/scale_in/ec2_scale_in/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.6k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>해당 내용은 EC2 Scale In이며<br>만약 Nginx, Apache 웹서버가 아닌 ELB에서 load balancing하는 경우에는<br><a href="/2019/04/20/dev/infra/aws/scalability/scale_in/elb/">Scale In - ELB</a>를 함께 참조하세요.<br>내용은 전반적으로 AWS Console에서만 하는 내용이 아닌 직접 서버에서 command를 사용하는 내용도 포함되어있습니다.<br>shell에서 command를 사용하는 경우는 EC2를 임시 중지하여 다시 Scale Out 하려할 때와<br>수행 후 종료를 할때도 더 안전하고 빠르게 종료 가능합니다,<br>어떻게 보면 command 부분은 무시하고 AWS Console 작업만 해도 무방합니다.<br>command 사용은 AWS Cloud가 아닌 물리 Rack Server 사용시 안전한 재부팅, 종료시의 본인의 경험기반 입니다.<br>케이스는 nginx와 java application이 포함된 5개의 EC2를 3개로 줄이려는 작업니다.</p>
+<hr>
+<h1 id="Scale-In-EC2-Instance"><a href="#Scale-In-EC2-Instance" class="headerlink" title="Scale In - EC2 Instance"></a>Scale In - EC2 Instance</h1><h2 id="Server-Resource-정리"><a href="#Server-Resource-정리" class="headerlink" title="Server Resource 정리"></a>Server Resource 정리</h2><h3 id="Nginx-종료"><a href="#Nginx-종료" class="headerlink" title="Nginx 종료"></a>Nginx 종료</h3><h4 id="Case-Service"><a href="#Case-Service" class="headerlink" title="Case : Service"></a>Case : Service</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[ec2-user]$</span><span class="bash"> sudo service nginx stop</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>sudo service nginx stop</code> Nginx 사용시 sudo 권한으로 서비스 정지</li>
+</ul>
+<h4 id="Case-특정-user에게-권한-부여된-경우"><a href="#Case-특정-user에게-권한-부여된-경우" class="headerlink" title="Case : 특정 user에게 권한 부여된 경우"></a>Case : 특정 user에게 권한 부여된 경우</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[ec2-user]$</span><span class="bash"> sudo su - app</span></span><br><span class="line"><span class="meta">[app]$</span><span class="bash"> sudo nginx -s stop</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 또는</span></span><br><span class="line"><span class="meta">[app]$</span><span class="bash"> sudo nginx -s quit</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>특정 User에게 Nginx 권한을 부여한 경우 서비스 정지 하는 방법.</li>
+<li><code>sudo nginx -s stop</code> stop 명령어는 프로세스를 바로 종료</li>
+<li><code>sudo nginx -s quit</code> quit 명령어는 현재 연결중인 커넥션이 모두 끊어질때 까지 기다린 후 종료</li>
+</ul>
+<h3 id="Java-application-종료"><a href="#Java-application-종료" class="headerlink" title="Java application 종료"></a>Java application 종료</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[ec2-user]$</span><span class="bash"> sudo su - app</span></span><br><span class="line"><span class="meta">[app]$</span><span class="bash"> ps -ef | grep java</span></span><br><span class="line">app    5589     1  0 14:21 ?        00:00:48 java -jar</span><br><span class="line">... /home/app/api.app.com/app/app-0.0.1-SNAPSHOT.jar</span><br><span class="line">app    6436  6398  0 17:05 pts/0    00:00:00 grep --color=auto java</span><br><span class="line"><span class="meta">[app]$</span><span class="bash"> <span class="built_in">kill</span> -15 5589</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 또는</span></span><br><span class="line"><span class="meta">[app]$</span><span class="bash"> <span class="built_in">kill</span> -9 5589</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>java application process 확인</li>
+<li>해당 process id의 process 종료</li>
+<li><code>kill -15 5589</code> -15 옵션은 application 자체의 pre destroy 수행 및 정상적인 종료를 의도</li>
+<li><code>kill -9 5589</code> -9 옵션은 강제 종료</li>
+<li>종료 명령어 후 application process를 재확인하여 종료되었는지 확인이 필요함.</li>
+</ul>
+<h3 id="Memory-sync"><a href="#Memory-sync" class="headerlink" title="Memory sync"></a>Memory sync</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[ec2-user]$</span><span class="bash"> sudo su</span></span><br><span class="line"><span class="meta">[root]$</span><span class="bash"> <span class="built_in">cd</span> /</span></span><br><span class="line"><span class="meta">[root]$</span><span class="bash"> sync;sync;sync</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>memory buffer에 존재 하다가 특정 부분에서 저장되는 어플리케이션이 존재하는 경우 시스템을 재부팅 및 종료 하기전에 강제로 저장하게끔 하기 위한 작업</li>
+<li>반드시 root 계정으로 “/“ 위치에서 해야합니다.</li>
+<li>커널 파일 시스템의 메모리 버퍼를 예약된 데이터로 커밋</li>
+<li>이 작업을 하지 않고 중지 및 종료시 어떤 데이터로 저장이 되기전에 메모리 버퍼에서 날라가는 경우가 발생 할 수 있음.</li>
+<li>EC2를 종료하여 인스턴스를 삭제 하는 작업도 빠르게 하기 위함도 있지만 임시 중지 하고자 할때 좋음.</li>
+</ul>
+<hr>
+<h2 id="중지-또는-종료하려는-EC2를-찾아-이동"><a href="#중지-또는-종료하려는-EC2를-찾아-이동" class="headerlink" title="중지 또는 종료하려는 EC2를 찾아 이동"></a>중지 또는 종료하려는 EC2를 찾아 이동</h2><p><img data-src="/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/1.jpg" alt="1"><br><img data-src="/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/2.jpg" alt="2"><br><img data-src="/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/3.jpg" alt="3"></p>
+<hr>
+<h2 id="중지-또는-종료하려는-EC2-검색"><a href="#중지-또는-종료하려는-EC2-검색" class="headerlink" title="중지 또는 종료하려는 EC2 검색"></a>중지 또는 종료하려는 EC2 검색</h2><p><img data-src="/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/4.jpg" alt="4"></p>
+<hr>
+<h2 id="중지-또는-종료하려는-EC2-선택"><a href="#중지-또는-종료하려는-EC2-선택" class="headerlink" title="중지 또는 종료하려는 EC2 선택"></a>중지 또는 종료하려는 EC2 선택</h2><p><img data-src="/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/5.jpg" alt="5"></p>
+<hr>
+<h2 id="선택한-EC2를-중지-또는-종료"><a href="#선택한-EC2를-중지-또는-종료" class="headerlink" title="선택한 EC2를 중지 또는 종료"></a>선택한 EC2를 중지 또는 종료</h2><p><img data-src="/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/6.jpg" alt="6"></p>
+<hr>
+<h2 id="중지-또는-종료"><a href="#중지-또는-종료" class="headerlink" title="중지 또는 종료"></a>중지 또는 종료</h2><p><img data-src="/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/7.jpg" alt="7"></p>
+<ul>
+<li>중지 또는 종료시 신중함이 필요합니다.<br>(잘못된 EC2 선택시 운영 중인 서비스의 down time을 초래하여 사용자에게는 장애를 발생시키기 때문에 확인 또 확인.)</li>
+</ul>
+<hr>
+<h2 id="종료-진행-중"><a href="#종료-진행-중" class="headerlink" title="종료 진행 중"></a>종료 진행 중</h2><p><img data-src="/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/8.jpg" alt="8"></p>
+<ul>
+<li>종료 진행 중</li>
+</ul>
+<p><img data-src="/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/9.jpg" alt="9"></p>
+<ul>
+<li>종료 완료</li>
+<li>종료 완료 후 일정 시간이 지나면 인스턴스 자체가 사라집니다.</li>
+</ul>
+<hr>
+<h2 id="종료-완료-및-인스턴스-없어짐-확인"><a href="#종료-완료-및-인스턴스-없어짐-확인" class="headerlink" title="종료 완료 및 인스턴스 없어짐 확인."></a>종료 완료 및 인스턴스 없어짐 확인.</h2><p><img data-src="/image/dev/devops/aws/scalability/scale_in/ec2_scale_in/10.png" alt="10"> </p>
+<hr>
+<h2 id="연관된-Jenkins-관련-정보-제거"><a href="#연관된-Jenkins-관련-정보-제거" class="headerlink" title="연관된 Jenkins 관련 정보 제거"></a>연관된 Jenkins 관련 정보 제거</h2><ul>
+<li>배포 클러스터링 관리가 Jenkins에서 하였다면 Jenkins에서 제외</li>
+<li>Script에서 하였다면 Script에서 해당 EC2 Instance 제외 </li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AWS/" rel="tag"># AWS</a>
+              <a href="/tags/EC2/" rel="tag"># EC2</a>
+              <a href="/tags/ScaleIn/" rel="tag"># ScaleIn</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/04/20/dev/devops/aws/scalability/scale_in/elb_scale_in/" rel="prev" title="ELB - Scale In">
+      <i class="fa fa-chevron-left"></i> ELB - Scale In
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/04/21/dev/devops/aws/security-credentials/iam/user/s3/create/s3-user-create/" rel="next" title="S3 - Create User">
+      S3 - Create User <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+        </div>
+        
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luke Seo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">52k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">47 mins.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1.15.0/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://mun-su.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://mun-su.github.io/2019/04/20/dev/devops/aws/scalability/scale_in/ec2_scale_in/";
+    this.page.identifier = "2019/04/20/dev/devops/aws/scalability/scale_in/ec2_scale_in/";
+    this.page.title = "EC2 - Scale In";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://mun-su.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

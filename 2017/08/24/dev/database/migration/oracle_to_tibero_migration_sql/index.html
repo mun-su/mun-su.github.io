@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1.0.2/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mun-su.github.io","root":"/","scheme":"Gemini","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="프로젝트에서 기존 사용하던 Oracle License를 다른 서비스에서 사용하기로 하여Oracle 에서 Tibero 이관작업을 진행하면서 내용들을 정리한 내용입니다.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oracle to Tibero Migration SQL">
+<meta property="og:url" content="https://mun-su.github.io/2017/08/24/dev/database/migration/oracle_to_tibero_migration_sql/index.html">
+<meta property="og:site_name" content="Devlog">
+<meta property="og:description" content="프로젝트에서 기존 사용하던 Oracle License를 다른 서비스에서 사용하기로 하여Oracle 에서 Tibero 이관작업을 진행하면서 내용들을 정리한 내용입니다.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-08-24T09:12:00.000Z">
+<meta property="article:modified_time" content="2020-11-29T11:21:16.995Z">
+<meta property="article:author" content="Luke Seo">
+<meta property="article:tag" content="Database">
+<meta property="article:tag" content="Migration">
+<meta property="article:tag" content="Oracle">
+<meta property="article:tag" content="Tibero">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://mun-su.github.io/2017/08/24/dev/database/migration/oracle_to_tibero_migration_sql/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Oracle to Tibero Migration SQL | Devlog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130657175-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-130657175-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <main class="main">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Devlog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">58</span></a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">52</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">40</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Escalation"><span class="nav-number">1.</span> <span class="nav-text">Escalation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Insert-SQL"><span class="nav-number">1.1.</span> <span class="nav-text">Insert SQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Insert-Logic"><span class="nav-number">1.2.</span> <span class="nav-text">Insert Logic</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Select-SQL"><span class="nav-number">1.3.</span> <span class="nav-text">Select SQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Select-Logic"><span class="nav-number">1.4.</span> <span class="nav-text">Select Logic</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Update-SQL"><span class="nav-number">1.5.</span> <span class="nav-text">Update SQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Update-Logic"><span class="nav-number">1.6.</span> <span class="nav-text">Update Logic</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Delete-SQL-amp-Logic"><span class="nav-number">1.7.</span> <span class="nav-text">Delete SQL &amp; Logic</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Luke Seo"
+      src="/image/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Luke Seo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mun-su" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mun-su" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </header>
+
+      
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/mun-su" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div id="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+      <div class="main-inner">
+        
+
+        <div class="content post posts-expand">
+          
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://mun-su.github.io/2017/08/24/dev/database/migration/oracle_to_tibero_migration_sql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/image/avatar.jpeg">
+      <meta itemprop="name" content="Luke Seo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Devlog">
+    </span>
+
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Oracle to Tibero Migration SQL
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-08-24 18:12:00" itemprop="dateCreated datePublished" datetime="2017-08-24T18:12:00+09:00">2017-08-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-11-29 20:21:16" itemprop="dateModified" datetime="2020-11-29T20:21:16+09:00">2020-11-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/" itemprop="url" rel="index"><span itemprop="name">Dev</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/Database/" itemprop="url" rel="index"><span itemprop="name">Database</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/Database/Migration/" itemprop="url" rel="index"><span itemprop="name">Migration</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2017/08/24/dev/database/migration/oracle_to_tibero_migration_sql/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/08/24/dev/database/migration/oracle_to_tibero_migration_sql/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>4.2k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>4 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>프로젝트에서 기존 사용하던 Oracle License를 다른 서비스에서 사용하기로 하여<br>Oracle 에서 Tibero 이관작업을 진행하면서 내용들을 정리한 내용입니다.</p>
+<h2 id="Escalation"><a href="#Escalation" class="headerlink" title="Escalation"></a>Escalation</h2><h3 id="Insert-SQL"><a href="#Insert-SQL" class="headerlink" title="Insert SQL"></a>Insert SQL</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- AS-IS : Oracle</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">SERVER</span> (</span><br><span class="line">	<span class="keyword">ID</span></span><br><span class="line">	, CODE</span><br><span class="line">	, HOSTNAME</span><br><span class="line">	, <span class="keyword">STATUS</span></span><br><span class="line">	, <span class="keyword">COMMENT</span></span><br><span class="line">) <span class="keyword">VALUES</span> (</span><br><span class="line">	?, ?, ?, ?, EMPTY_CLOB()</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	<span class="keyword">COMMENT</span></span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">SERVER</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">UPDATE</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- TO-BE : Tibero</span></span><br><span class="line"><span class="comment">-- (1) Oracle과 다르게 최초 초기화 하지 않고 직접 Bind 할수있습니다.</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">SERVER</span> (</span><br><span class="line">	<span class="keyword">ID</span></span><br><span class="line">	, CODE</span><br><span class="line">	, HOSTNAME</span><br><span class="line">	, <span class="keyword">STATUS</span></span><br><span class="line">	, <span class="keyword">COMMENT</span></span><br><span class="line">) <span class="keyword">VALUES</span> (</span><br><span class="line">	?, ?, ?, ?, ?</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- Tibero는 COMMENT를 SQL에서 BIND할수 있지만 개인적으론 동일하게 EMPTY_CLOB() 초기화를 추천합니다.</span></span><br><span class="line"><span class="comment">-- (2) 초기화 후 할 경우</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">SERVER</span> <span class="keyword">SET</span></span><br><span class="line">	<span class="keyword">COMMENT</span> = ?</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br></pre></td></tr></table></figure>
+
+<h3 id="Insert-Logic"><a href="#Insert-Logic" class="headerlink" title="Insert Logic"></a>Insert Logic</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AS-IS : Oracle</span></span><br><span class="line">String comment = <span class="string">&quot;Server Commnet&quot;</span>; <span class="comment">// input comment</span></span><br><span class="line">CLOB clob = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">pstmt.setString(<span class="number">1</span>, id);</span><br><span class="line">rs = pstmt.executeQuery();</span><br><span class="line"><span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">	clob = ((OracleResultSet)rs).getCLOB(<span class="string">&quot;COMMENT&quot;</span>);</span><br><span class="line">	<span class="keyword">int</span> length = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> chunk = clob.getChunkSize();</span><br><span class="line">	<span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[chunk];</span><br><span class="line">	Writer writer = clob.getCharacterOutputStream();</span><br><span class="line">	StringReader sr = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">	<span class="keyword">while</span> ((length = sr.read(buffer, <span class="number">0</span>, chunk)) != -<span class="number">1</span>) &#123;</span><br><span class="line">		writer.write(buffer, <span class="number">0</span>, length);</span><br><span class="line">	&#125;</span><br><span class="line">	sr.close();</span><br><span class="line">	writer.close();</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">// TO-BE : Tibero</span></span><br><span class="line"><span class="comment">// (1) Oracle과 다르게 최초 초기화 하지않고 직접 Bind 할수있습니다.</span></span><br><span class="line">String comment = <span class="string">&quot;Master Server&quot;</span>; <span class="comment">// input comment</span></span><br><span class="line"></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">StringReader srClob = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">pstmt.setString(<span class="number">1</span>, id);</span><br><span class="line">pstmt.setString(<span class="number">2</span>, code);</span><br><span class="line">pstmt.setString(<span class="number">3</span>, hostname);</span><br><span class="line">pstmt.setString(<span class="number">4</span>, status);</span><br><span class="line">pstmt.setCharacterStream(<span class="number">5</span>, srClob, comment.getBytes().length);</span><br><span class="line">pstmt.executeUpdate();</span><br><span class="line"></span><br><span class="line"><span class="comment">// (2) 초기화 후 할 경우</span></span><br><span class="line">String comment = <span class="string">&quot;Master Server&quot;</span>; <span class="comment">// input comment</span></span><br><span class="line"></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">StringReader srClob = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">pstmt.setCharacterStream(<span class="number">1</span>, srClob, comment.getBytes().length);</span><br><span class="line">pstmt.setString(<span class="number">2</span>, id);</span><br><span class="line">pstmt.executeUpdate();</span><br></pre></td></tr></table></figure>
+
+<h3 id="Select-SQL"><a href="#Select-SQL" class="headerlink" title="Select SQL"></a>Select SQL</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- SQL은 변동 사항이 없습니다.</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	<span class="keyword">COMMENT</span></span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">SERVER</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br></pre></td></tr></table></figure>
+
+<h3 id="Select-Logic"><a href="#Select-Logic" class="headerlink" title="Select Logic"></a>Select Logic</h3><p>주의할점은 Tibero에서 사용하는 CLOB class가 틀리며 Method 대소문자도 틀리므로<br>소스단위에서 정확하게 수정해야합니다.<br>그리고 Tibero에서 TbClob가 null이 아니며 length가 0 이상일때만 값을 세팅하는 이유는<br>Tibero 자체 버그때문에 Null이 아니더라도 length가 0일때가 있으며<br>0일때 단순한 white space가 아닌 이상한 쓰레기 값이 들어올 때가 있기 때문에 주의해야합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AS-IS : Oracle</span></span><br><span class="line">CLOB clobComment = <span class="keyword">null</span>;</span><br><span class="line">String comment = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (rs.next()) &#123;</span><br><span class="line">	clobComment = ((OracleResultSet)rs).getCLOB(<span class="string">&quot;COMMENT&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (clobComment != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">int</span> textLength = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">int</span> chunk = clobComment.getChunkSize();</span><br><span class="line">		<span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[chunk];</span><br><span class="line">		StringWriter sw = <span class="keyword">new</span> StringWriter();</span><br><span class="line">		Reader reader = clobComment.getCharacterStream();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">while</span> ((textLength = reader.read(bufffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">			sw.write(buffer, <span class="number">0</span>, textLength);</span><br><span class="line">		&#125;</span><br><span class="line">		comment = sw.toString();</span><br><span class="line">		sw.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// TO-BE : Tibero</span></span><br><span class="line">TbClob clobComment = <span class="keyword">null</span>; <span class="comment">//BLOB 일때는 TbBlob</span></span><br><span class="line">String comment = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (rs.next()) &#123;</span><br><span class="line">	clobComment = (TbClog)((TbResultSet)rs).getClob(<span class="string">&quot;COMMENT&quot;</span>);</span><br><span class="line">	<span class="keyword">int</span> lobLength = clobComment.length();</span><br><span class="line">	<span class="keyword">if</span> (clobComment != <span class="keyword">null</span> &amp;&amp; lobLength &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="keyword">int</span> textLength = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[lobLength];</span><br><span class="line">		StringWriter sw = <span class="keyword">new</span> StringWriter();</span><br><span class="line">		Reader reader = clobComment.getCharacterStream();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">while</span> ((textLength = reader.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">			sw.write(buffer, <span class="number">0</span>, textLength);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		comment = sw.toString();</span><br><span class="line">		sw.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Update-SQL"><a href="#Update-SQL" class="headerlink" title="Update SQL"></a>Update SQL</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- AS-IS : Oracle</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">SERVER</span> <span class="keyword">SET</span></span><br><span class="line">	CODE = ?,</span><br><span class="line">	HOSTNAME = ?,</span><br><span class="line">	<span class="keyword">STATUS</span> = ?,</span><br><span class="line">	<span class="keyword">COMMENT</span> = EMPTY_CLOB()</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	<span class="keyword">COMMENT</span></span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">SERVER</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">UPDATE</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- TO-BE : Tibero</span></span><br><span class="line"><span class="comment">-- 초기화 동시에 세팅</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">SERVER</span> <span class="keyword">SET</span></span><br><span class="line">	CODE = ?,</span><br><span class="line">	HOSTNAME = ?,</span><br><span class="line">	<span class="keyword">STATUS</span> = ?,</span><br><span class="line">	<span class="keyword">COMMENT</span> = ?</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br><span class="line"></span><br><span class="line"><span class="comment">-- Oracle과 동일하게 EMPTY_CLOB()로 초기화 후 UPDATE도 가능합니다</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">SERVER</span> <span class="keyword">SET</span></span><br><span class="line">	<span class="keyword">COMMENT</span> = ?</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br></pre></td></tr></table></figure>
+
+<h3 id="Update-Logic"><a href="#Update-Logic" class="headerlink" title="Update Logic"></a>Update Logic</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AS-IS : Oracle</span></span><br><span class="line">CLOB clobComment = <span class="keyword">null</span>;</span><br><span class="line">String comment = <span class="string">&quot;Update Server Comment&quot;</span>; <span class="comment">// Comment</span></span><br><span class="line"></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">pstmt.setString(<span class="number">1</span>, id);</span><br><span class="line">rs = pstmt.executeQuery();</span><br><span class="line"><span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">	clobComment = ((OracleResultSet)rs).getCLOB(<span class="string">&quot;COMMENT&quot;</span>);</span><br><span class="line">	<span class="keyword">int</span> length = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> chunk = clobComment.getChunkSize();</span><br><span class="line">	<span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[chunk];</span><br><span class="line">	Writer writer = clobComment.getCharacterOutputStream();</span><br><span class="line">	StringReader reader = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">	<span class="keyword">while</span> ((length = reader.read(buffer, <span class="number">0</span>, chunk)) != -<span class="number">1</span>) &#123;</span><br><span class="line">		writer.write(buffer, <span class="number">0</span>, length);</span><br><span class="line">	&#125;</span><br><span class="line">	reader.close();</span><br><span class="line">	writer.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// TO-BE : Tibero</span></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">StringReader srClob = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">pstmt.setCharacterStream(<span class="number">1</span>, srClob, comment.getBytes().length);</span><br><span class="line">pstmt.setString(<span class="number">2</span>, id);</span><br><span class="line">pstmt.executeUpdate();</span><br></pre></td></tr></table></figure>
+
+<h3 id="Delete-SQL-amp-Logic"><a href="#Delete-SQL-amp-Logic" class="headerlink" title="Delete SQL &amp; Logic"></a>Delete SQL &amp; Logic</h3><p>Row Delete는 기존과 동일하므로 생략.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Database/" rel="tag"># Database</a>
+              <a href="/tags/Migration/" rel="tag"># Migration</a>
+              <a href="/tags/Oracle/" rel="tag"># Oracle</a>
+              <a href="/tags/Tibero/" rel="tag"># Tibero</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2017/08/24/dev/database/oracle/oracle_lock_select_and_clear/" rel="next" title="Oracle lock select and clear">
+      Oracle lock select and clear <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+        </div>
+        
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luke Seo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">52k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">47 mins.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1.15.0/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://mun-su.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://mun-su.github.io/2017/08/24/dev/database/migration/oracle_to_tibero_migration_sql/";
+    this.page.identifier = "2017/08/24/dev/database/migration/oracle_to_tibero_migration_sql/";
+    this.page.title = "Oracle to Tibero Migration SQL";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://mun-su.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

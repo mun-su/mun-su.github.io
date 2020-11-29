@@ -1,0 +1,1086 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/05/dev/devops/aws/database/rds/create/rds-create/</loc>
+    
+    <lastmod>2020-11-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/04/20/dev/devops/aws/scalability/scale_up/ec2_scale_up/</loc>
+    
+    <lastmod>2020-11-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2018/01/30/dev/database/altibase/altibase_start_shutdown/</loc>
+    
+    <lastmod>2020-11-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2017/08/24/dev/database/oracle/oracle_use_instant_client/</loc>
+    
+    <lastmod>2020-11-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/about/index.html</loc>
+    
+    <lastmod>2020-11-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2018/01/29/dev/database/ibm_pda/ibm_netezza_user_group_info_sql/</loc>
+    
+    <lastmod>2020-11-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2018/01/29/dev/database/ibm_pda/ibm_netezza_user_sql/</loc>
+    
+    <lastmod>2020-11-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2017/08/31/dev/database/ibm_pda/ibm_netezza_setting_cmd/</loc>
+    
+    <lastmod>2020-11-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2018/01/30/dev/database/ibm_pda/ibm_netezza_group_concat_aggregates/</loc>
+    
+    <lastmod>2020-11-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2017/08/24/dev/database/migration/oracle_to_tibero_migration_sql/</loc>
+    
+    <lastmod>2020-11-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2017/09/08/dev/database/oracle/oracle_odbc/</loc>
+    
+    <lastmod>2020-11-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/09/06/dev/devops/aws/database/rds/snapshot/create/</loc>
+    
+    <lastmod>2020-11-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/09/16/dev/devops/jira/jira_to_docker/</loc>
+    
+    <lastmod>2020-08-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/09/15/dev/devops/jira/restore/</loc>
+    
+    <lastmod>2020-08-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/09/14/dev/devops/jira/backup/</loc>
+    
+    <lastmod>2020-08-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/04/21/dev/devops/aws/security-credentials/iam/user/s3/create/s3-user-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/04/21/dev/devops/aws/security-credentials/iam/role/s3/create/s3-role-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/04/21/dev/devops/aws/security-credentials/iam/role/s3/apply/s3-role-apply/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/15/dev/devops/aws/security-credentials/iam/role/lambda/create/lambda-role-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/16/dev/devops/aws/security-credentials/iam/role/lambda/create/lambda-edge-role-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/01/dev/devops/aws/security-credentials/iam/role/ecr/create/ecr-role-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/01/dev/devops/aws/security-credentials/iam/role/ecr/apply/ecr-role-apply/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/02/dev/devops/aws/security-credentials/acm/create/acm-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/04/20/dev/devops/aws/scalability/scale_up/ebs_scale_up/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/04/20/dev/devops/aws/scalability/scale_in/elb_scale_in/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/04/20/dev/devops/aws/scalability/scale_in/ec2_scale_in/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/04/20/dev/devops/aws/scalability/scale_down/rds_scale_down/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/11/dev/devops/aws/network-contents/vpc/subnet/create/public-subnet-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/11/dev/devops/aws/network-contents/vpc/subnet/create/private-subnet-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/13/dev/devops/aws/network-contents/vpc/routing-table/relation/routing-table-relation-public-subnet/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/12/dev/devops/aws/network-contents/vpc/routing-table/relation/routing-table-relation-private-subnet/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/06/dev/devops/aws/network-contents/vpc/routing-table/create/routing-table-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/06/dev/devops/aws/network-contents/vpc/internet-gateway/create/internet-gateway-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/14/dev/devops/aws/network-contents/vpc/internet-gateway/relation/internet-gateway-relation-vpc/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/06/dev/devops/aws/network-contents/vpc/create/vpc-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/02/dev/devops/aws/network-contents/route53/record-set/route53-record-set/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/02/dev/devops/aws/network-contents/route53/create/route53-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/18/dev/devops/aws/network-contents/cloud-front/create/cloud-front-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/18/dev/devops/aws/network-contents/cloud-front/config/cloud-front-domain/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/05/dev/devops/aws/database/rds/parameter-group/engine/rds-parameter-group-mariadb-10-3/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/05/dev/devops/aws/database/rds/parameter-group/create/rds-parameter-group-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/05/dev/devops/aws/database/rds/parameter-group/apply-fix/rds-parameter-group-apply-fix/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/05/dev/devops/aws/database/rds/parameter-group/apply/rds-parameter-group-apply/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/05/dev/devops/aws/database/rds/option-group/create/rds-option-group-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/05/dev/devops/aws/database/rds/option-group/apply/rds-option-group-apply/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/01/dev/devops/aws/computing/ecr/use/ecr-use/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/02/dev/devops/aws/computing/ecr/lifecycle/ecr-untagged-lifecycle/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/02/dev/devops/aws/computing/ecr/lifecycle/ecr-tagged-ifecycle/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/01/dev/devops/aws/computing/ecr/create/ecr-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/05/dev/devops/aws/computing/ec2/instance/create/ec2-instance-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/04/dev/devops/aws/computing/ec2/elb/http-redirect-https/elb-http-redirect-https/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/04/dev/devops/aws/computing/ec2/elb/create/elb-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/03/dev/devops/aws/computing/ec2/elastic-ip/create/elastic-ip-create/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2019/08/03/dev/devops/aws/computing/ec2/elastic-ip/assign/elastic-ip-assign/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2017/08/24/dev/database/oracle/oracle_lock_select_and_clear/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2018/01/29/dev/database/ibm_pda/ibm_netezza_user_group_sql/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2018/01/29/dev/database/ibm_pda/ibm_netezza_group_sql/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2018/01/29/dev/database/ibm_pda/ibm_netezza_dbconnect_sql/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/2018/01/30/dev/database/altibase/altibase_user_sql/</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/index.html</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/index.html</loc>
+    
+    <lastmod>2020-08-05</lastmod>
+    
+  </url>
+  
+
+  <url>
+    <loc>https://mun-su.github.io/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Jira/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Backup/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Docker/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Restore/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Database/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Altibase/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Startup/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Shutdown/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/User/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/IBM-PDA/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/NETEZZA/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Connect/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/GROUP-CONCAT/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Group/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Info/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Migration/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Oracle/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Tibero/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Lock/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Instant-Client/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Windows/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/ODBC/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/AWS/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Scalability/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/ScaleDown/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/RDS/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/EC2/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/ScaleIn/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/ELB/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/EBS/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/ScaleUp/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Volume/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Snapshot/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Network-And-Contents/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/CloudFront/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Computing/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/ECR/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/VPC/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Route53/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Security-Credentials/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/ACM/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Option-Group/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Parameter-Group/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Elastic-IP/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Internet-Gateway/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Routing-Table/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Subnet/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/IAM/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Role/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/S3/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Lambda-Edge/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/tags/Lambda/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/Database/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/Database/IBM-PDA/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/Database/Altibase/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/Jira/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/Database/Migration/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/Database/Oracle/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Network-And-Contents/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Scalability/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Security-Credentials/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Database/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Computing/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Network-And-Contents/VPC/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Scalability/ScaleDown/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Security-Credentials/IAM/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Scalability/ScaleIn/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Scalability/ScaleUp/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Database/RDS/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Network-And-Contents/CloudFront/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Computing/ECR/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Network-And-Contents/Route53/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Security-Credentials/ACM/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Computing/EC2/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Network-And-Contents/VPC/Subnet/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Security-Credentials/IAM/Role/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Database/RDS/Snapshot/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Database/RDS/Option-Group/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Database/RDS/Parameter-Group/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Computing/EC2/Elastic-IP/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Computing/EC2/ELB/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Network-And-Contents/VPC/Internet-Gateway/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Network-And-Contents/VPC/Routing-Table/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Security-Credentials/IAM/Role/ECR/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Security-Credentials/IAM/Role/S3/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Security-Credentials/IAM/Role/Lambda-Edge/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Security-Credentials/IAM/Role/Lambda/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Security-Credentials/IAM/User/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mun-su.github.io/categories/Dev/DevOps/AWS/Security-Credentials/IAM/User/S3/</loc>
+    <lastmod>2020-11-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+</urlset>

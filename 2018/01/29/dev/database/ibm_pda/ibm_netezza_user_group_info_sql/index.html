@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1.0.2/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mun-su.github.io","root":"/","scheme":"Gemini","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="IBM PDA (Pure Data Analytics) NETEZZA 의 유저, 그룹, Database 정보 관련 SQL.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IBM PDA Netezza - 유저, 그룹, Database 정보 관련 SQL">
+<meta property="og:url" content="https://mun-su.github.io/2018/01/29/dev/database/ibm_pda/ibm_netezza_user_group_info_sql/index.html">
+<meta property="og:site_name" content="Devlog">
+<meta property="og:description" content="IBM PDA (Pure Data Analytics) NETEZZA 의 유저, 그룹, Database 정보 관련 SQL.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-01-29T13:20:00.000Z">
+<meta property="article:modified_time" content="2020-11-29T11:28:39.272Z">
+<meta property="article:author" content="Luke Seo">
+<meta property="article:tag" content="Database">
+<meta property="article:tag" content="IBM PDA">
+<meta property="article:tag" content="NETEZZA">
+<meta property="article:tag" content="Info">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://mun-su.github.io/2018/01/29/dev/database/ibm_pda/ibm_netezza_user_group_info_sql/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>IBM PDA Netezza - 유저, 그룹, Database 정보 관련 SQL | Devlog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130657175-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-130657175-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <main class="main">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Devlog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">58</span></a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">52</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">40</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%9C%A0%EC%A0%80%EC%9D%98-%EA%B4%80%EB%A6%AC%EC%9E%90-%EC%97%AC%EB%B6%80-%EB%A7%8C%EB%A3%8C-%EC%97%AC%EB%B6%80"><span class="nav-number">1.</span> <span class="nav-text">유저의 관리자 여부, 만료 여부</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TOOLKIT%EC%9D%B4-%EC%84%A4%EC%B9%98%EB%90%98%EC%96%B4-%EC%9E%88%EC%A7%80-%EC%95%8A%EC%9D%80-version"><span class="nav-number">1.1.</span> <span class="nav-text">TOOLKIT이 설치되어 있지 않은 version</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TOOLKIT-%EC%A7%80%EC%9B%90-%EC%97%86%EC%9D%B4-GROUP-CONCAT%EC%9D%84-cpp%EC%9C%BC%EB%A1%9C-aggregates%EB%A5%BC-%EC%83%9D%EC%84%B1-%EB%B0%8F-%EC%82%AC%EC%9A%A9-version"><span class="nav-number">1.2.</span> <span class="nav-text">TOOLKIT 지원 없이 GROUP_CONCAT을 cpp으로 aggregates를 생성 및 사용 version</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TOOLKIT%EC%9D%B4-%EC%9E%88%EC%9D%84%EC%8B%9C-GROUP-CONCAT-%EC%82%AC%EC%9A%A9-version"><span class="nav-number">1.3.</span> <span class="nav-text">TOOLKIT이 있을시 GROUP_CONCAT 사용 version</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%9C%A0%EC%A0%80-%EA%B7%B8%EB%A3%B9-Database-%EC%A0%95%EB%B3%B4"><span class="nav-number">2.</span> <span class="nav-text">유저, 그룹, Database 정보</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example"><span class="nav-number">3.</span> <span class="nav-text">Example</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Luke Seo"
+      src="/image/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Luke Seo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mun-su" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mun-su" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </header>
+
+      
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/mun-su" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div id="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+      <div class="main-inner">
+        
+
+        <div class="content post posts-expand">
+          
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://mun-su.github.io/2018/01/29/dev/database/ibm_pda/ibm_netezza_user_group_info_sql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/image/avatar.jpeg">
+      <meta itemprop="name" content="Luke Seo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Devlog">
+    </span>
+
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          IBM PDA Netezza - 유저, 그룹, Database 정보 관련 SQL
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-01-29 22:20:00" itemprop="dateCreated datePublished" datetime="2018-01-29T22:20:00+09:00">2018-01-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-11-29 20:28:39" itemprop="dateModified" datetime="2020-11-29T20:28:39+09:00">2020-11-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/" itemprop="url" rel="index"><span itemprop="name">Dev</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/Database/" itemprop="url" rel="index"><span itemprop="name">Database</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/Database/IBM-PDA/" itemprop="url" rel="index"><span itemprop="name">IBM PDA</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2018/01/29/dev/database/ibm_pda/ibm_netezza_user_group_info_sql/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/29/dev/database/ibm_pda/ibm_netezza_user_group_info_sql/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.2k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>5 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>IBM PDA (Pure Data Analytics) NETEZZA 의 유저, 그룹, Database 정보 관련 SQL.</p>
+<h2 id="유저의-관리자-여부-만료-여부"><a href="#유저의-관리자-여부-만료-여부" class="headerlink" title="유저의 관리자 여부, 만료 여부"></a>유저의 관리자 여부, 만료 여부</h2><p>IBM에서 제공하는 Toolkit에 각종 function, aggregates 등등이 추가됩니다.<br>실제 개발을 하면서 GRROUP_CONCAT을 쓸 경우가 많았고 GROUP_CONCAT은 Toolkit이 설치 되어있어야 쓸수 있다.<br>하지만 Product 환경에서는 Toolkit 없는 경우도 있기 때문에 3가지 Version으로 Query를 작성하였다</p>
+<ol>
+<li>Toolkit 설치되어 있지 않은 version</li>
+<li>Toolkit을 지원 받을시 추가적인 비용이 필요하므로 GROUP_CONCAT을 cpp으로 aggregates를 생성 및 사용 version</li>
+<li>Toolkit이 있을시 GROUP_CONCAT 사용 version</li>
+</ol>
+<p><font color="red">* 필요한 값 USERNAME, ADMIN_STATUS(관리자 여부), REVOKE_STATUS(REVOKE 여부), DATABASE(해당 사용자가 접근 가능한 DATABASE)</font><br><font color="red">* Project의 DATABASE를 구분 하는 기준값은 “;;”으로 정하였었다.</font></p>
+<h3 id="TOOLKIT이-설치되어-있지-않은-version"><a href="#TOOLKIT이-설치되어-있지-않은-version" class="headerlink" title="TOOLKIT이 설치되어 있지 않은 version"></a>TOOLKIT이 설치되어 있지 않은 version</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- USERNAME, ADMIN_STATUS, REVOKE_STATUS</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  A.USERNAME,</span><br><span class="line">  (<span class="keyword">CASE</span></span><br><span class="line">    <span class="keyword">WHEN</span> A.USERESOURCEGRPNAME = <span class="string">&#x27;_ADMIN_&#x27;</span> <span class="keyword">THEN</span> <span class="string">&#x27;ADMIN&#x27;</span></span><br><span class="line">    <span class="keyword">ELSE</span> <span class="keyword">DECODE</span> (</span><br><span class="line">      (</span><br><span class="line">        <span class="keyword">SELECT</span></span><br><span class="line">          <span class="keyword">COUNT</span>(*)</span><br><span class="line">        <span class="keyword">FROM</span> _V_USER_PRIV</span><br><span class="line">        <span class="keyword">WHERE</span> UOPOBJPRIV = <span class="number">0</span></span><br><span class="line">        <span class="keyword">AND</span> USERNAME = A.USERNAME</span><br><span class="line">      ),</span><br><span class="line">      <span class="number">0</span>, <span class="string">&#x27;NONE&#x27;</span>, <span class="string">&#x27;ADMIN&#x27;</span></span><br><span class="line">    )</span><br><span class="line">  <span class="keyword">END</span>) <span class="keyword">AS</span> ADMIN_STATUS,</span><br><span class="line">  (<span class="keyword">CASE</span></span><br><span class="line">    <span class="keyword">WHEN</span> A.VALIDUNTIL <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">AND</span> A.VALIDUNTIL &lt; <span class="keyword">NOW</span>() <span class="keyword">THEN</span> <span class="string">&#x27;REVOKE&#x27;</span></span><br><span class="line">    <span class="comment">-- WHEN A.PWD_INVALID = TRUE THEN &#x27;REVOKE&#x27;</span></span><br><span class="line">    <span class="comment">-- WHEN A.ACC_LOCKED = TRUE THEN &#x27;REVOKE&#x27;</span></span><br><span class="line">    <span class="comment">-- WHEN A.PWD_EXPIRY != 0 AND DATE(A.PWD_LAST_CHGED + A.PWD_EXPIRY) &lt;= DATE(TO_CHAR(NOW(), &#x27;YYYY-MM-DD&#x27;)) THEN &#x27;REVOKE&#x27;</span></span><br><span class="line">    <span class="keyword">ELSE</span> <span class="string">&#x27;ACTIVE&#x27;</span></span><br><span class="line">  <span class="keyword">END</span>) <span class="keyword">AS</span> REVOKE_STATUS</span><br><span class="line"><span class="keyword">FROM</span> _V_USER A</span><br><span class="line"><span class="comment">-- WHERE A.USERNAME = UPPPER(&#x27;TESTUSER&#x27;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- DATABASE</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  OBJECTNAME <span class="keyword">AS</span> DATABASE_NAME</span><br><span class="line"><span class="keyword">FROM</span> _V_USER_PRIV</span><br><span class="line"><span class="keyword">WHERE</span> OBJECTTYPE = <span class="string">&#x27;DATABASE&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> OBJECTNAME &lt;&gt; <span class="string">&#x27;DATABASE&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> USERNAME = &#123;account_name&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="TOOLKIT-지원-없이-GROUP-CONCAT을-cpp으로-aggregates를-생성-및-사용-version"><a href="#TOOLKIT-지원-없이-GROUP-CONCAT을-cpp으로-aggregates를-생성-및-사용-version" class="headerlink" title="TOOLKIT 지원 없이 GROUP_CONCAT을 cpp으로 aggregates를 생성 및 사용 version"></a>TOOLKIT 지원 없이 GROUP_CONCAT을 cpp으로 aggregates를 생성 및 사용 version</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- USERNAME, ADMIN_STATUS, REVOKE_STATUS, DATABASE</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  A.USERNAME,</span><br><span class="line">  (<span class="keyword">CASE</span></span><br><span class="line">    <span class="keyword">WHEN</span> A.USERESOURCEGRPNAME = <span class="string">&#x27;_ADMIN_&#x27;</span> <span class="keyword">THEN</span> <span class="string">&#x27;ADMIN&#x27;</span></span><br><span class="line">    <span class="keyword">ELSE</span> <span class="keyword">DECODE</span> (</span><br><span class="line">      (</span><br><span class="line">        <span class="keyword">SELECT</span></span><br><span class="line">          <span class="keyword">COUNT</span>(*)</span><br><span class="line">        <span class="keyword">FROM</span> _V_USER_PRIV</span><br><span class="line">        <span class="keyword">WHERE</span> UOPOBJPRIV = <span class="number">0</span></span><br><span class="line">        <span class="keyword">AND</span> USERNAME = A.USERNAME</span><br><span class="line">      ),</span><br><span class="line">      <span class="number">0</span>, <span class="string">&#x27;NONE&#x27;</span>, <span class="string">&#x27;ADMIN&#x27;</span></span><br><span class="line">    )</span><br><span class="line">  <span class="keyword">END</span>) <span class="keyword">AS</span> ADMIN_STATUS,</span><br><span class="line">  (<span class="keyword">CASE</span></span><br><span class="line">    <span class="keyword">WHEN</span> A.VALIDUNTIL <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">AND</span> A.VALIDUNTIL &lt; <span class="keyword">NOW</span>() <span class="keyword">THEN</span> <span class="string">&#x27;REVOKE&#x27;</span></span><br><span class="line">    <span class="comment">-- WHEN A.PWD_INVALID = TRUE THEN &#x27;REVOKE&#x27;</span></span><br><span class="line">    <span class="comment">-- WHEN A.ACC_LOCKED = TRUE THEN &#x27;REVOKE&#x27;</span></span><br><span class="line">    <span class="comment">-- WHEN A.PWD_EXPIRY != 0 AND DATE(A.PWD_LAST_CHGED + A.PWD_EXPIRY) &lt;= DATE(TO_CHAR(NOW(), &#x27;YYYY-MM-DD&#x27;)) THEN &#x27;REVOKE&#x27;</span></span><br><span class="line">    <span class="keyword">ELSE</span> <span class="string">&#x27;ACTIVE&#x27;</span></span><br><span class="line">  <span class="keyword">END</span>) <span class="keyword">AS</span> REVOKE_STATUS,</span><br><span class="line">  (</span><br><span class="line">    <span class="keyword">SELECT</span></span><br><span class="line">      <span class="keyword">GROUP_CONCAT</span>(OBJECTNAME, <span class="string">&#x27;,&#x27;</span>) <span class="keyword">AS</span> DATABASE_NAME</span><br><span class="line">    <span class="keyword">FROM</span> _V_USER_PRIV</span><br><span class="line">    <span class="keyword">WHERE</span> OBJECTTYPE = <span class="string">&#x27;DATABASE&#x27;</span></span><br><span class="line">    <span class="keyword">AND</span> OBJECTNAME &lt;&gt; <span class="string">&#x27;DATABASE&#x27;</span></span><br><span class="line">    <span class="keyword">AND</span> USERNAME = A.USERNAME</span><br><span class="line">  )</span><br><span class="line"><span class="keyword">FROM</span> _V_USER A</span><br><span class="line"><span class="comment">-- WHERE A.USERNAME = UPPPER(&#x27;TESTUSER&#x27;)</span></span><br></pre></td></tr></table></figure>
+
+<p>“;;”을 사용시 정상적으로 수행되지 않았던 이슈가 있어서 “,”으로 처리 후 server-side에서 replaceAll(“,”, “;;”)을 사용하였다 (개발 Project의 구분값의 기준이 “;;”으므로 불가피)<br><font color="red">* GROUP_CONCAT cpp은 따로 Post할 예정이다</font></p>
+<h3 id="TOOLKIT이-있을시-GROUP-CONCAT-사용-version"><a href="#TOOLKIT이-있을시-GROUP-CONCAT-사용-version" class="headerlink" title="TOOLKIT이 있을시 GROUP_CONCAT 사용 version"></a>TOOLKIT이 있을시 GROUP_CONCAT 사용 version</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- USERNAME, ADMIN_STATUS, REVOKE_STATUS, DATABASE</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  A.USERNAME,</span><br><span class="line">  (<span class="keyword">CASE</span></span><br><span class="line">    <span class="keyword">WHEN</span> A.USERESOURCEGRPNAME = <span class="string">&#x27;_ADMIN_&#x27;</span> <span class="keyword">THEN</span> <span class="string">&#x27;ADMIN&#x27;</span></span><br><span class="line">    <span class="keyword">ELSE</span> <span class="keyword">DECODE</span> (</span><br><span class="line">      (</span><br><span class="line">        <span class="keyword">SELECT</span></span><br><span class="line">          <span class="keyword">COUNT</span>(*)</span><br><span class="line">        <span class="keyword">FROM</span> _V_USER_PRIV</span><br><span class="line">        <span class="keyword">WHERE</span> UOPOBJPRIV = <span class="number">0</span></span><br><span class="line">        <span class="keyword">AND</span> USERNAME = A.USERNAME</span><br><span class="line">      ),</span><br><span class="line">      <span class="number">0</span>, <span class="string">&#x27;NONE&#x27;</span>, <span class="string">&#x27;ADMIN&#x27;</span></span><br><span class="line">    )</span><br><span class="line">  <span class="keyword">END</span>) <span class="keyword">AS</span> ADMIN_STATUS,</span><br><span class="line">  (<span class="keyword">CASE</span></span><br><span class="line">    <span class="keyword">WHEN</span> A.VALIDUNTIL <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">AND</span> A.VALIDUNTIL &lt; <span class="keyword">NOW</span>() <span class="keyword">THEN</span> <span class="string">&#x27;REVOKE&#x27;</span></span><br><span class="line">    <span class="comment">-- WHEN A.PWD_INVALID = TRUE THEN &#x27;REVOKE&#x27;</span></span><br><span class="line">    <span class="comment">-- WHEN A.ACC_LOCKED = TRUE THEN &#x27;REVOKE&#x27;</span></span><br><span class="line">    <span class="comment">-- WHEN A.PWD_EXPIRY != 0 AND DATE(A.PWD_LAST_CHGED + A.PWD_EXPIRY) &lt;= DATE(TO_CHAR(NOW(), &#x27;YYYY-MM-DD&#x27;)) THEN &#x27;REVOKE&#x27;</span></span><br><span class="line">    <span class="keyword">ELSE</span> <span class="string">&#x27;ACTIVE&#x27;</span></span><br><span class="line">  <span class="keyword">END</span>) <span class="keyword">AS</span> REVOKE_STATUS,</span><br><span class="line">  (</span><br><span class="line">    <span class="keyword">SELECT</span></span><br><span class="line">      <span class="keyword">GROUP_CONCAT</span>(OBJECTNAME, <span class="string">&#x27;;;&#x27;</span>) <span class="keyword">AS</span> DATABASE_NAME</span><br><span class="line">    <span class="keyword">FROM</span> _V_USER_PRIV</span><br><span class="line">    <span class="keyword">WHERE</span> OBJECTTYPE = <span class="string">&#x27;DATABASE&#x27;</span></span><br><span class="line">    <span class="keyword">AND</span> OBJECTNAME &lt;&gt; <span class="string">&#x27;DATABASE&#x27;</span></span><br><span class="line">    <span class="keyword">AND</span> USERNAME = A.USERNAME</span><br><span class="line">  )</span><br><span class="line"><span class="keyword">FROM</span> _V_USER A</span><br><span class="line"><span class="comment">-- WHERE A.USERNAME = UPPPER(&#x27;TESTUSER&#x27;)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="유저-그룹-Database-정보"><a href="#유저-그룹-Database-정보" class="headerlink" title="유저, 그룹, Database 정보"></a>유저, 그룹, Database 정보</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 전체 DATABASE</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  <span class="keyword">DATABASE</span></span><br><span class="line"><span class="keyword">FROM</span> _V_DATABASE</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 현재 유저가 접근할수 있는 Database 조회</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  OBJECTNAME <span class="keyword">AS</span> <span class="keyword">DATABASE</span></span><br><span class="line"><span class="keyword">FROM</span> _V_USER_PRIV</span><br><span class="line"><span class="keyword">WHERE</span> OBJECTTYPE = <span class="string">&#x27;DATABASE&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> OBJECTNAME &lt;&gt; <span class="string">&#x27;DATABASE&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> USERNAME = &#123;account_name&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 해당 유저의 소속 그룹 조회</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  A.USERNAME <span class="keyword">AS</span> ACCOUNT_NAME,</span><br><span class="line">  B.GROUPNAME <span class="keyword">AS</span> GROUP_NAME</span><br><span class="line"><span class="keyword">FROM</span> _V_USER A, _V_USERGROUPS B</span><br><span class="line"><span class="keyword">WHERE</span> A.USERNAME = B.USERNAME</span><br><span class="line"><span class="keyword">AND</span> A.USERNAME = &#123;account_name&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 해당 그룹에 소속된 유저 조회</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  A.USERNAME <span class="keyword">AS</span> ACCOUNT_NAME,</span><br><span class="line">  B.GROUPNAME <span class="keyword">AS</span> GROUP_NAME</span><br><span class="line"><span class="keyword">FROM</span> _V_USER A, _V_USERGROUPS B</span><br><span class="line"><span class="keyword">WHERE</span> A.USERNAME = B.USERNAME</span><br><span class="line"><span class="keyword">AND</span> B.GROUPNAME = &#123;group_name&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 전체 그룹정보</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  (<span class="keyword">CASE</span></span><br><span class="line">    <span class="keyword">WHEN</span> GRORSGPECENT = <span class="number">0</span></span><br><span class="line">    <span class="keyword">THEN</span> <span class="string">&#x27;User Group&#x27;</span></span><br><span class="line">    <span class="keyword">ELSE</span> <span class="string">&#x27;Resource Group&#x27;</span></span><br><span class="line">  <span class="keyword">END</span>) <span class="keyword">AS</span> GROUP_TYPE,</span><br><span class="line">  GROUPNAME <span class="keyword">AS</span> GROUP_NAME,</span><br><span class="line">  TO_CHAR(DATETIME(CREATEDATE), <span class="string">&#x27;YYYYMMDDHH24MISS&#x27;</span>) <span class="keyword">AS</span> CREATE_DATE</span><br><span class="line"><span class="keyword">FROM</span> _V_GROUP</span><br><span class="line"><span class="comment">-- AND GROUPNAME = UPPER(&#123;group_name&#125;)</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="number">1</span>, <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 전체 DATABASE</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  <span class="keyword">DATABASE</span></span><br><span class="line"><span class="keyword">FROM</span> _V_DATABASE</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 현재 유저가 접근할수 있는 Database 조회</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  OBJECTNAME <span class="keyword">AS</span> <span class="keyword">DATABASE</span></span><br><span class="line"><span class="keyword">FROM</span> _V_USER_PRIV</span><br><span class="line"><span class="keyword">WHERE</span> OBJECTTYPE = <span class="string">&#x27;DATABASE&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> OBJECTNAME &lt;&gt; <span class="string">&#x27;DATABASE&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> USERNAME = <span class="string">&#x27;TESTUSER&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 해당 유저의 소속 그룹 조회</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  A.USERNAME <span class="keyword">AS</span> ACCOUNT_NAME,</span><br><span class="line">  B.GROUPNAME <span class="keyword">AS</span> GROUP_NAME</span><br><span class="line"><span class="keyword">FROM</span> _V_USER A, _V_USERGROUPS B</span><br><span class="line"><span class="keyword">WHERE</span> A.USERNAME = B.USERNAME</span><br><span class="line"><span class="keyword">AND</span> A.USERNAME = <span class="string">&#x27;TESTUSER&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 해당 그룹에 소속된 유저 조회</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  A.USERNAME <span class="keyword">AS</span> ACCOUNT_NAME,</span><br><span class="line">  B.GROUPNAME <span class="keyword">AS</span> GROUP_NAME</span><br><span class="line"><span class="keyword">FROM</span> _V_USER A, _V_USERGROUPS B</span><br><span class="line"><span class="keyword">WHERE</span> A.USERNAME = B.USERNAME</span><br><span class="line"><span class="keyword">AND</span> B.GROUPNAME = <span class="string">&#x27;TESTGROUP&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 전체 그룹정보</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  (<span class="keyword">CASE</span></span><br><span class="line">    <span class="keyword">WHEN</span> GRORSGPECENT = <span class="number">0</span></span><br><span class="line">    <span class="keyword">THEN</span> <span class="string">&#x27;User Group&#x27;</span></span><br><span class="line">    <span class="keyword">ELSE</span> <span class="string">&#x27;Resource Group&#x27;</span></span><br><span class="line">  <span class="keyword">END</span>) <span class="keyword">AS</span> GROUP_TYPE,</span><br><span class="line">  GROUPNAME <span class="keyword">AS</span> GROUP_NAME,</span><br><span class="line">  TO_CHAR(DATETIME(CREATEDATE), <span class="string">&#x27;YYYYMMDDHH24MISS&#x27;</span>) <span class="keyword">AS</span> CREATE_DATE</span><br><span class="line"><span class="keyword">FROM</span> _V_GROUP</span><br><span class="line"><span class="comment">-- AND GROUPNAME = UPPER(&#x27;TESTGROUP&#x27;)</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="number">1</span>, <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Database/" rel="tag"># Database</a>
+              <a href="/tags/IBM-PDA/" rel="tag"># IBM PDA</a>
+              <a href="/tags/NETEZZA/" rel="tag"># NETEZZA</a>
+              <a href="/tags/Info/" rel="tag"># Info</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/01/29/dev/database/ibm_pda/ibm_netezza_user_group_sql/" rel="prev" title="IBM PDA Netezza - 유저와 그룹 연계 관련 SQL">
+      <i class="fa fa-chevron-left"></i> IBM PDA Netezza - 유저와 그룹 연계 관련 SQL
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/01/30/dev/database/ibm_pda/ibm_netezza_group_concat_aggregates/" rel="next" title="IBM PDA Netezza - Create GROUP_CONCAT aggregates (none TOOLKIT)">
+      IBM PDA Netezza - Create GROUP_CONCAT aggregates (none TOOLKIT) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+        </div>
+        
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luke Seo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">52k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">47 mins.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1.15.0/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://mun-su.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://mun-su.github.io/2018/01/29/dev/database/ibm_pda/ibm_netezza_user_group_info_sql/";
+    this.page.identifier = "2018/01/29/dev/database/ibm_pda/ibm_netezza_user_group_info_sql/";
+    this.page.title = "IBM PDA Netezza - 유저, 그룹, Database 정보 관련 SQL";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://mun-su.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1.0.2/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mun-su.github.io","root":"/","scheme":"Gemini","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="EC2 IAM에 ECR 접근 권한을 추가 하기 위해 생성하는 Role입니다.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECR - Create Role">
+<meta property="og:url" content="https://mun-su.github.io/2019/08/01/dev/devops/aws/security-credentials/iam/role/ecr/create/ecr-role-create/index.html">
+<meta property="og:site_name" content="Devlog">
+<meta property="og:description" content="EC2 IAM에 ECR 접근 권한을 추가 하기 위해 생성하는 Role입니다.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/security-credentials/iam/role/ecr/create/1.jpg">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/security-credentials/iam/role/ecr/create/2.jpg">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/security-credentials/iam/role/ecr/create/3.jpg">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/security-credentials/iam/role/ecr/create/4.jpg">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/security-credentials/iam/role/ecr/create/5.png">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/security-credentials/iam/role/ecr/create/6.JPG">
+<meta property="og:image" content="https://mun-su.github.io/image/dev/devops/aws/security-credentials/iam/role/ecr/create/7.png">
+<meta property="article:published_time" content="2019-08-01T12:21:00.000Z">
+<meta property="article:modified_time" content="2020-08-05T17:40:44.139Z">
+<meta property="article:author" content="Luke Seo">
+<meta property="article:tag" content="AWS">
+<meta property="article:tag" content="ECR">
+<meta property="article:tag" content="Security Credentials">
+<meta property="article:tag" content="IAM">
+<meta property="article:tag" content="Role">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mun-su.github.io/image/dev/devops/aws/security-credentials/iam/role/ecr/create/1.jpg">
+
+<link rel="canonical" href="https://mun-su.github.io/2019/08/01/dev/devops/aws/security-credentials/iam/role/ecr/create/ecr-role-create/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>ECR - Create Role | Devlog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130657175-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-130657175-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <main class="main">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Devlog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">58</span></a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">52</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">40</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ECR-Create-Role"><span class="nav-number">1.</span> <span class="nav-text">ECR - Create Role</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AWS-%EB%A9%94%EC%9D%B8%EC%97%90%EC%84%9C-%EB%82%B4-%EB%B3%B4%EC%95%88-%EC%9E%90%EA%B2%A9-%EC%A6%9D%EB%AA%85-%EC%9D%B4%EB%8F%99"><span class="nav-number">1.1.</span> <span class="nav-text">AWS 메인에서 [내 보안 자격 증명] 이동</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%97%AD%ED%95%A0-%ED%83%AD%EC%9C%BC%EB%A1%9C-%EC%9D%B4%EB%8F%99"><span class="nav-number">1.2.</span> <span class="nav-text">역할 탭으로 이동.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%97%AD%ED%95%A0-%EB%A7%8C%EB%93%A4%EA%B8%B0-%ED%81%B4%EB%A6%AD"><span class="nav-number">1.3.</span> <span class="nav-text">역할 만들기 클릭.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%97%AD%ED%95%A0-%EB%A7%8C%EB%93%A4%EA%B8%B0"><span class="nav-number">1.4.</span> <span class="nav-text">역할 만들기</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EA%B6%8C%ED%95%9C-%EC%A0%95%EC%B1%85-%EC%97%B0%EA%B2%B0"><span class="nav-number">1.5.</span> <span class="nav-text">권한 정책 연결</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%83%9C%EA%B7%B8-%EC%B6%94%EA%B0%80"><span class="nav-number">1.6.</span> <span class="nav-text">태그 추가</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%97%AD%ED%95%A0-%EA%B2%80%ED%86%A0"><span class="nav-number">1.7.</span> <span class="nav-text">역할 검토</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Luke Seo"
+      src="/image/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Luke Seo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mun-su" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mun-su" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </header>
+
+      
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/mun-su" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div id="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+      <div class="main-inner">
+        
+
+        <div class="content post posts-expand">
+          
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://mun-su.github.io/2019/08/01/dev/devops/aws/security-credentials/iam/role/ecr/create/ecr-role-create/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/image/avatar.jpeg">
+      <meta itemprop="name" content="Luke Seo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Devlog">
+    </span>
+
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ECR - Create Role
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-08-01 21:21:00" itemprop="dateCreated datePublished" datetime="2019-08-01T21:21:00+09:00">2019-08-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-08-06 02:40:44" itemprop="dateModified" datetime="2020-08-06T02:40:44+09:00">2020-08-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/" itemprop="url" rel="index"><span itemprop="name">Dev</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/DevOps/AWS/" itemprop="url" rel="index"><span itemprop="name">AWS</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/DevOps/AWS/Security-Credentials/" itemprop="url" rel="index"><span itemprop="name">Security Credentials</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/DevOps/AWS/Security-Credentials/IAM/" itemprop="url" rel="index"><span itemprop="name">IAM</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/DevOps/AWS/Security-Credentials/IAM/Role/" itemprop="url" rel="index"><span itemprop="name">Role</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Dev/DevOps/AWS/Security-Credentials/IAM/Role/ECR/" itemprop="url" rel="index"><span itemprop="name">ECR</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2019/08/01/dev/devops/aws/security-credentials/iam/role/ecr/create/ecr-role-create/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/08/01/dev/devops/aws/security-credentials/iam/role/ecr/create/ecr-role-create/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>368</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>EC2 IAM에 ECR 접근 권한을 추가 하기 위해 생성하는 Role입니다.</p>
+<hr>
+<h1 id="ECR-Create-Role"><a href="#ECR-Create-Role" class="headerlink" title="ECR - Create Role"></a>ECR - Create Role</h1><h2 id="AWS-메인에서-내-보안-자격-증명-이동"><a href="#AWS-메인에서-내-보안-자격-증명-이동" class="headerlink" title="AWS 메인에서 [내 보안 자격 증명] 이동"></a>AWS 메인에서 [내 보안 자격 증명] 이동</h2><p><img data-src="/image/dev/devops/aws/security-credentials/iam/role/ecr/create/1.jpg" alt="1"></p>
+<hr>
+<h2 id="역할-탭으로-이동"><a href="#역할-탭으로-이동" class="headerlink" title="역할 탭으로 이동."></a>역할 탭으로 이동.</h2><p><img data-src="/image/dev/devops/aws/security-credentials/iam/role/ecr/create/2.jpg" alt="2"></p>
+<hr>
+<h2 id="역할-만들기-클릭"><a href="#역할-만들기-클릭" class="headerlink" title="역할 만들기 클릭."></a>역할 만들기 클릭.</h2><p><img data-src="/image/dev/devops/aws/security-credentials/iam/role/ecr/create/3.jpg" alt="3"></p>
+<hr>
+<h2 id="역할-만들기"><a href="#역할-만들기" class="headerlink" title="역할 만들기"></a>역할 만들기</h2><p><img data-src="/image/dev/devops/aws/security-credentials/iam/role/ecr/create/4.jpg" alt="4"></p>
+<ul>
+<li>신뢰할 수 있는 유형의 개체 : AWS 서비스 선택</li>
+<li>이 역할을 사용할 서비스 : EC2 선택</li>
+<li>다음 : 권한으로 이동.</li>
+</ul>
+<hr>
+<h2 id="권한-정책-연결"><a href="#권한-정책-연결" class="headerlink" title="권한 정책 연결"></a>권한 정책 연결</h2><p><img data-src="/image/dev/devops/aws/security-credentials/iam/role/ecr/create/5.png" alt="5"></p>
+<ul>
+<li>정책 필터 : <code>AmazonEC2ContainerRegistry</code> 입력</li>
+<li>정책 선택 : 정책은 상황에 맞게 할 필요가 있으며 아래의 정책을 모두 선택하는게 정답은 아닙니다.<ul>
+<li><code>AmazonEC2ContainerRegistryFullAccess</code></li>
+<li><code>AmazonEC2ContainerRegistryPowerUser</code></li>
+<li><code>AmazonEC2ContainerRegistryReadOnly</code></li>
+</ul>
+</li>
+<li>다음 : 태그로 이동.</li>
+</ul>
+<hr>
+<h2 id="태그-추가"><a href="#태그-추가" class="headerlink" title="태그 추가"></a>태그 추가</h2><p><img data-src="/image/dev/devops/aws/security-credentials/iam/role/ecr/create/6.JPG" alt="6"></p>
+<ul>
+<li>필요한 태그가 있는 경우 추가.</li>
+</ul>
+<hr>
+<h2 id="역할-검토"><a href="#역할-검토" class="headerlink" title="역할 검토"></a>역할 검토</h2><p><img data-src="/image/dev/devops/aws/security-credentials/iam/role/ecr/create/7.png" alt="7"></p>
+<ul>
+<li>역할 이름 입력</li>
+<li>선택한 정책 재확인.</li>
+<li>역할 만들기.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AWS/" rel="tag"># AWS</a>
+              <a href="/tags/ECR/" rel="tag"># ECR</a>
+              <a href="/tags/Security-Credentials/" rel="tag"># Security Credentials</a>
+              <a href="/tags/IAM/" rel="tag"># IAM</a>
+              <a href="/tags/Role/" rel="tag"># Role</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/04/21/dev/devops/aws/security-credentials/iam/role/s3/apply/s3-role-apply/" rel="prev" title="S3 - Apply Role">
+      <i class="fa fa-chevron-left"></i> S3 - Apply Role
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/08/01/dev/devops/aws/security-credentials/iam/role/ecr/apply/ecr-role-apply/" rel="next" title="ECR - Apply Role">
+      ECR - Apply Role <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+        </div>
+        
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Luke Seo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">52k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">47 mins.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1.15.0/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://mun-su.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://mun-su.github.io/2019/08/01/dev/devops/aws/security-credentials/iam/role/ecr/create/ecr-role-create/";
+    this.page.identifier = "2019/08/01/dev/devops/aws/security-credentials/iam/role/ecr/create/ecr-role-create/";
+    this.page.title = "ECR - Create Role";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://mun-su.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
