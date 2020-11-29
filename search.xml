@@ -1,135 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Jira - Backup</title>
-    <url>/2019/09/14/dev/devops/jira/backup/</url>
-    <content><![CDATA[<p>Jira를 backup 하는 방법에 대해 알아봅시다.<br>Jira의 경우 단순히 data 폴더를 덮어씌우는 경우 제대로 되지 않는 경우가 있기 때문에<br>Backup &amp; Restore 를 하는게 좋습니다.</p>
-<h1 id="Backup"><a href="#Backup" class="headerlink" title="Backup"></a>Backup</h1><p><img data-src="/image/dev/devops/jira/backup/1.png" alt="1"></p>
-<ul>
-<li><code>시스템</code> 메뉴로 이동</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/jira/backup/2.png" alt="2"></p>
-<ul>
-<li><code>시스템 백업</code> 메뉴 이동</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/jira/backup/3.png" alt="3"></p>
-<ul>
-<li>파일 이름 : 백업 결과물 파일 이름 입력.</li>
-<li><code>백업</code> 버튼 클릭하여 백업.</li>
-</ul>
-<hr>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root ~]<span class="comment"># cd /var/atlassian/application-data/jira/export</span></span><br><span class="line">[root <span class="built_in">export</span>]<span class="comment"># ls</span></span><br><span class="line">2019-09-14-0136.zip</span><br></pre></td></tr></table></figure>
-<ul>
-<li>지정한 파일 이름으로 zip 압축 파일이 생성됩니다.</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>DevOps</category>
-        <category>Jira</category>
-      </categories>
-      <tags>
-        <tag>Jira</tag>
-        <tag>Backup</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Jira - Installed to Docker</title>
-    <url>/2019/09/16/dev/devops/jira/jira_to_docker/</url>
-    <content><![CDATA[<p>기존 설치형 Jira를 Docker로 변경 하는 방법을 알아봅시다.</p>
-<h1 id="Installed-Jira"><a href="#Installed-Jira" class="headerlink" title="Installed Jira"></a>Installed Jira</h1><p>설치형에서 docker로 변경하기 위해 필요한 파일과 구조를 파악해야 합니다.</p>
-<h2 id="Tomcat-기반-구동-파일들이-있는-곳"><a href="#Tomcat-기반-구동-파일들이-있는-곳" class="headerlink" title="Tomcat 기반 구동 파일들이 있는 곳."></a>Tomcat 기반 구동 파일들이 있는 곳.</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root ~]<span class="comment"># cd /opt/atlassian/jira</span></span><br><span class="line">[root <span class="built_in">export</span>]<span class="comment"># ls</span></span><br><span class="line">BUILDING.txt     README.html  atlassian-jira  external-source  lib  temp         webapps</span><br><span class="line">CONTRIBUTING.md  README.md    bin             install.reg      licenses  tomcat-docs  work</span><br><span class="line">NOTICE           README.txt   conf            jre              logs      uninstall</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Jira (8.4 기준) Servlet, Soy view template, JSP, JQuery, Tomcat 8.x 사용하고 있습니다.</li>
-<li>bin : application 설정 파일과 application script 파일들이 있는 폴더.</li>
-<li>conf : tomcat 설정 파일들이 있는 폴더.</li>
-<li>jre : OpenJDK jre가 있는 폴더.</li>
-<li>logs : log 파일들이 있는 폴더.</li>
-<li>licenses : jira에서 사용중인 license text 파일(사용중인 오픈소스 libraries의 license text 입니다, Atlassian License가 아닙니다.)</li>
-</ul>
-<h2 id="첨부파일-plugin-등의-data-파일이-있는-곳"><a href="#첨부파일-plugin-등의-data-파일이-있는-곳" class="headerlink" title="첨부파일, plugin 등의 data 파일이 있는 곳."></a>첨부파일, plugin 등의 data 파일이 있는 곳.</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root ~]<span class="comment"># cd /var/atlassian/application-data/jira</span></span><br><span class="line">[root jira]<span class="comment"># ls</span></span><br><span class="line">analytics-logs  <span class="built_in">export</span>                     monitor</span><br><span class="line">caches          import                     plugins</span><br><span class="line">customisations  jira-healthcheck-eol.json  tmp</span><br><span class="line">data            <span class="built_in">log</span></span><br><span class="line">dbconfig.xml    logos</span><br></pre></td></tr></table></figure>
-<ul>
-<li>data : 첨부파일 및 각종 아바타 이미지들이 있는 폴더.</li>
-<li>export : 시스템 백업시 생성되는 파일이 존재하는 폴더.</li>
-<li>import : 시스템 복구시 백업 파일을 로드하는 폴더.</li>
-<li>plugin : 플러그인이 있는 폴더.</li>
-<li>dbconfig.xml : database 정보가 있습니다.</li>
-</ul>
-<blockquote>
-<p><strong>자세한 내용은</strong><a href="https://confluence.atlassian.com/adminjiraserver073/jira-application-home-directory-861253888.html">Jira Home And other important directories</a><strong>에서 확인하시면 좋습니다.</strong></p>
-</blockquote>
-<h1 id="Docker-Jira"><a href="#Docker-Jira" class="headerlink" title="Docker Jira"></a>Docker Jira</h1><p>이제 본격적으로 docker로 변환하는 과정의 내용입니다.</p>
-<h2 id="Docker-Image"><a href="#Docker-Image" class="headerlink" title="Docker Image"></a>Docker Image</h2><p>Atlassian에서 <a href="https://hub.docker.com/r/atlassian/jira-software">Jira Software Docker Image</a>를 제공하고 있고, 8.4를 사용하였습니다.</p>
-<h2 id="순서"><a href="#순서" class="headerlink" title="순서"></a>순서</h2><ul>
-<li>RDS 스냅샷 생성.</li>
-<li>Jira Backup</li>
-<li>Docker Compose yml 작성</li>
-<li>application-data 복사하여 덮어쓰기</li>
-<li>Directory owner 변경</li>
-<li>Docker Container 생성 및 시작</li>
-<li>Jira Restore.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/jira/restore/1.png" alt="1"></p>
-<ul>
-<li><code>시스템</code> 메뉴로 이동</li>
-</ul>
-<p><a href="/2019/09/14/dev/devops/jira/backup/">Jira Backup</a><br><a href="/2019/09/06/dev/devops/aws/database/rds/snapshot/create/">RDS 스냅샷 생성</a><br><a href="/2019/09/15/dev/devops/jira/restore/">Jira Restore</a></p>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>DevOps</category>
-        <category>Jira</category>
-      </categories>
-      <tags>
-        <tag>Jira</tag>
-        <tag>Docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Jira - Restore</title>
-    <url>/2019/09/15/dev/devops/jira/restore/</url>
-    <content><![CDATA[<p>Jira를 restore 하는 방법에 대해 알아봅시다.</p>
-<h1 id="Restore"><a href="#Restore" class="headerlink" title="Restore"></a>Restore</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root ~]<span class="comment"># cd /var/atlassian/application-data/jira/export</span></span><br><span class="line">[root <span class="built_in">export</span>]<span class="comment"># ls</span></span><br><span class="line">2019-09-14-0136.zip</span><br><span class="line">[root <span class="built_in">export</span>]<span class="comment"># cp 2019-09-14-0136.zip ../import</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>export에 생성된 백업 파일을 import 경로에 복사합니다.</li>
-<li>docker 사용시 볼륨에서 동일하게 복사합니다.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/jira/restore/1.png" alt="1"></p>
-<ul>
-<li><code>시스템</code> 메뉴로 이동</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/jira/restore/2.png" alt="2"></p>
-<ul>
-<li><code>시스템 복원</code> 메뉴 이동</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/jira/restore/3.png" alt="3"></p>
-<ul>
-<li>파일 이름 : 이전에 백업한 파일명 입력.</li>
-<li><code>복원</code> 버튼 클릭하여 복원.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/jira/restore/4.png" alt="4"><br><img data-src="/image/dev/devops/jira/restore/5.png" alt="5"></p>
-<ul>
-<li>복구가 정상적으로 되었는지 확인합니다.</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>DevOps</category>
-        <category>Jira</category>
-      </categories>
-      <tags>
-        <tag>Jira</tag>
-        <tag>Restore</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Altibase - Start and Shutdown</title>
     <url>/2018/01/30/dev/database/altibase/altibase_start_shutdown/</url>
     <content><![CDATA[<p>Altibase의 구동과 종료</p>
@@ -432,26 +303,6 @@
       </tags>
   </entry>
   <entry>
-    <title>IBM PDA Netezza - 유저 관련 SQL</title>
-    <url>/2018/01/29/dev/database/ibm_pda/ibm_netezza_user_sql/</url>
-    <content><![CDATA[<p>IBM PDA (Pure Data Analytics) NETEZZA 의 유저 관련 SQL입니다</p>
-<h2 id="User"><a href="#User" class="headerlink" title="User"></a>User</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 유저 생성</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> &#123;account_name&#125; <span class="keyword">WITH</span> <span class="keyword">PASSWORD</span> &#123;<span class="keyword">password</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 삭제</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">USER</span> &#123;account_name&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 패스워드 변경</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> &#123;account_name&#125; <span class="keyword">WITH</span> <span class="keyword">PASSWORD</span> &#123;<span class="keyword">password</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 계정 만료기간 지정</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> &#123;account_name&#125; <span class="keyword">WITH</span> VALID <span class="keyword">UNTIL</span> &#123;<span class="built_in">date</span>(yyyy-mm-dd hh:mm:ss)&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 계정 만료기간 제거</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> &#123;account_name&#125; <span class="keyword">WITH</span> VALID <span class="keyword">UNTIL</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 계정 비밀번호 즉시 만료 (비밀번호 만료시 password를 변경하여 해제 가능)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> &#123;account_name&#125; <span class="keyword">EXPIRE</span> <span class="keyword">PASSWORD</span>;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 유저 생성</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> TESTUSER <span class="keyword">WITH</span> <span class="keyword">PASSWORD</span> <span class="string">&#x27;password&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 삭제</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">USER</span> TESTUSER;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 패스워드 변경</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> TESTUSER <span class="keyword">WITH</span> <span class="keyword">PASSWORD</span> <span class="string">&#x27;password&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 계정 만료기간 지정</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> TESTUSER <span class="keyword">WITH</span> VALID <span class="keyword">UNTIL</span> <span class="string">&#x27;2018-01-29 23:59:59&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 계정 만료기간 제거</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> TESTUSER <span class="keyword">WITH</span> VALID <span class="keyword">UNTIL</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 계정 비밀번호 즉시 만료 (비밀번호 만료시 password를 변경하여 해제 가능)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> TESTUSER <span class="keyword">EXPIRE</span> <span class="keyword">PASSWORD</span>;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>Database</category>
-        <category>IBM PDA</category>
-      </categories>
-      <tags>
-        <tag>Database</tag>
-        <tag>User</tag>
-        <tag>IBM PDA</tag>
-        <tag>NETEZZA</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>IBM PDA Netezza - 유저와 그룹 연계 관련 SQL</title>
     <url>/2018/01/29/dev/database/ibm_pda/ibm_netezza_user_group_sql/</url>
     <content><![CDATA[<p>IBM PDA (Pure Data Analytics) NETEZZA 의 유저와 그룹 연계 관련 SQL이다.</p>
@@ -472,37 +323,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Oracle to Tibero Migration SQL</title>
-    <url>/2017/08/24/dev/database/migration/oracle_to_tibero_migration_sql/</url>
-    <content><![CDATA[<p>프로젝트에서 기존 사용하던 Oracle License를 다른 서비스에서 사용하기로 하여<br>Oracle 에서 Tibero 이관작업을 진행하면서 내용들을 정리한 내용입니다.</p>
-<h2 id="Escalation"><a href="#Escalation" class="headerlink" title="Escalation"></a>Escalation</h2><h3 id="Insert-SQL"><a href="#Insert-SQL" class="headerlink" title="Insert SQL"></a>Insert SQL</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- AS-IS : Oracle</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">SERVER</span> (</span><br><span class="line">	<span class="keyword">ID</span></span><br><span class="line">	, CODE</span><br><span class="line">	, HOSTNAME</span><br><span class="line">	, <span class="keyword">STATUS</span></span><br><span class="line">	, <span class="keyword">COMMENT</span></span><br><span class="line">) <span class="keyword">VALUES</span> (</span><br><span class="line">	?, ?, ?, ?, EMPTY_CLOB()</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	<span class="keyword">COMMENT</span></span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">SERVER</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">UPDATE</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- TO-BE : Tibero</span></span><br><span class="line"><span class="comment">-- (1) Oracle과 다르게 최초 초기화 하지 않고 직접 Bind 할수있습니다.</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">SERVER</span> (</span><br><span class="line">	<span class="keyword">ID</span></span><br><span class="line">	, CODE</span><br><span class="line">	, HOSTNAME</span><br><span class="line">	, <span class="keyword">STATUS</span></span><br><span class="line">	, <span class="keyword">COMMENT</span></span><br><span class="line">) <span class="keyword">VALUES</span> (</span><br><span class="line">	?, ?, ?, ?, ?</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- Tibero는 COMMENT를 SQL에서 BIND할수 있지만 개인적으론 동일하게 EMPTY_CLOB() 초기화를 추천합니다.</span></span><br><span class="line"><span class="comment">-- (2) 초기화 후 할 경우</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">SERVER</span> <span class="keyword">SET</span></span><br><span class="line">	<span class="keyword">COMMENT</span> = ?</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br></pre></td></tr></table></figure>
-
-<h3 id="Insert-Logic"><a href="#Insert-Logic" class="headerlink" title="Insert Logic"></a>Insert Logic</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// AS-IS : Oracle</span></span><br><span class="line">String comment = <span class="string">&quot;Server Commnet&quot;</span>; <span class="comment">// input comment</span></span><br><span class="line">CLOB clob = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">pstmt.setString(<span class="number">1</span>, id);</span><br><span class="line">rs = pstmt.executeQuery();</span><br><span class="line"><span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">	clob = ((OracleResultSet)rs).getCLOB(<span class="string">&quot;COMMENT&quot;</span>);</span><br><span class="line">	<span class="keyword">int</span> length = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> chunk = clob.getChunkSize();</span><br><span class="line">	<span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[chunk];</span><br><span class="line">	Writer writer = clob.getCharacterOutputStream();</span><br><span class="line">	StringReader sr = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">	<span class="keyword">while</span> ((length = sr.read(buffer, <span class="number">0</span>, chunk)) != -<span class="number">1</span>) &#123;</span><br><span class="line">		writer.write(buffer, <span class="number">0</span>, length);</span><br><span class="line">	&#125;</span><br><span class="line">	sr.close();</span><br><span class="line">	writer.close();</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">// TO-BE : Tibero</span></span><br><span class="line"><span class="comment">// (1) Oracle과 다르게 최초 초기화 하지않고 직접 Bind 할수있습니다.</span></span><br><span class="line">String comment = <span class="string">&quot;Master Server&quot;</span>; <span class="comment">// input comment</span></span><br><span class="line"></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">StringReader srClob = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">pstmt.setString(<span class="number">1</span>, id);</span><br><span class="line">pstmt.setString(<span class="number">2</span>, code);</span><br><span class="line">pstmt.setString(<span class="number">3</span>, hostname);</span><br><span class="line">pstmt.setString(<span class="number">4</span>, status);</span><br><span class="line">pstmt.setCharacterStream(<span class="number">5</span>, srClob, comment.getBytes().length);</span><br><span class="line">pstmt.executeUpdate();</span><br><span class="line"></span><br><span class="line"><span class="comment">// (2) 초기화 후 할 경우</span></span><br><span class="line">String comment = <span class="string">&quot;Master Server&quot;</span>; <span class="comment">// input comment</span></span><br><span class="line"></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">StringReader srClob = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">pstmt.setCharacterStream(<span class="number">1</span>, srClob, comment.getBytes().length);</span><br><span class="line">pstmt.setString(<span class="number">2</span>, id);</span><br><span class="line">pstmt.executeUpdate();</span><br></pre></td></tr></table></figure>
-
-<h3 id="Select-SQL"><a href="#Select-SQL" class="headerlink" title="Select SQL"></a>Select SQL</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- SQL은 변동 사항이 없습니다.</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	<span class="keyword">COMMENT</span></span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">SERVER</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br></pre></td></tr></table></figure>
-
-<h3 id="Select-Logic"><a href="#Select-Logic" class="headerlink" title="Select Logic"></a>Select Logic</h3><p>주의할점은 Tibero에서 사용하는 CLOB class가 틀리며 Method 대소문자도 틀리므로<br>소스단위에서 정확하게 수정해야합니다.<br>그리고 Tibero에서 TbClob가 null이 아니며 length가 0 이상일때만 값을 세팅하는 이유는<br>Tibero 자체 버그때문에 Null이 아니더라도 length가 0일때가 있으며<br>0일때 단순한 white space가 아닌 이상한 쓰레기 값이 들어올 때가 있기 때문에 주의해야합니다.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// AS-IS : Oracle</span></span><br><span class="line">CLOB clobComment = <span class="keyword">null</span>;</span><br><span class="line">String comment = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (rs.next()) &#123;</span><br><span class="line">	clobComment = ((OracleResultSet)rs).getCLOB(<span class="string">&quot;COMMENT&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (clobComment != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">int</span> textLength = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">int</span> chunk = clobComment.getChunkSize();</span><br><span class="line">		<span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[chunk];</span><br><span class="line">		StringWriter sw = <span class="keyword">new</span> StringWriter();</span><br><span class="line">		Reader reader = clobComment.getCharacterStream();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">while</span> ((textLength = reader.read(bufffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">			sw.write(buffer, <span class="number">0</span>, textLength);</span><br><span class="line">		&#125;</span><br><span class="line">		comment = sw.toString();</span><br><span class="line">		sw.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// TO-BE : Tibero</span></span><br><span class="line">TbClob clobComment = <span class="keyword">null</span>; <span class="comment">//BLOB 일때는 TbBlob</span></span><br><span class="line">String comment = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (rs.next()) &#123;</span><br><span class="line">	clobComment = (TbClog)((TbResultSet)rs).getClob(<span class="string">&quot;COMMENT&quot;</span>);</span><br><span class="line">	<span class="keyword">int</span> lobLength = clobComment.length();</span><br><span class="line">	<span class="keyword">if</span> (clobComment != <span class="keyword">null</span> &amp;&amp; lobLength &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="keyword">int</span> textLength = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[lobLength];</span><br><span class="line">		StringWriter sw = <span class="keyword">new</span> StringWriter();</span><br><span class="line">		Reader reader = clobComment.getCharacterStream();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">while</span> ((textLength = reader.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">			sw.write(buffer, <span class="number">0</span>, textLength);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		comment = sw.toString();</span><br><span class="line">		sw.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Update-SQL"><a href="#Update-SQL" class="headerlink" title="Update SQL"></a>Update SQL</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- AS-IS : Oracle</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">SERVER</span> <span class="keyword">SET</span></span><br><span class="line">	CODE = ?,</span><br><span class="line">	HOSTNAME = ?,</span><br><span class="line">	<span class="keyword">STATUS</span> = ?,</span><br><span class="line">	<span class="keyword">COMMENT</span> = EMPTY_CLOB()</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	<span class="keyword">COMMENT</span></span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">SERVER</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">UPDATE</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- TO-BE : Tibero</span></span><br><span class="line"><span class="comment">-- 초기화 동시에 세팅</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">SERVER</span> <span class="keyword">SET</span></span><br><span class="line">	CODE = ?,</span><br><span class="line">	HOSTNAME = ?,</span><br><span class="line">	<span class="keyword">STATUS</span> = ?,</span><br><span class="line">	<span class="keyword">COMMENT</span> = ?</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br><span class="line"></span><br><span class="line"><span class="comment">-- Oracle과 동일하게 EMPTY_CLOB()로 초기화 후 UPDATE도 가능합니다</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">SERVER</span> <span class="keyword">SET</span></span><br><span class="line">	<span class="keyword">COMMENT</span> = ?</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br></pre></td></tr></table></figure>
-
-<h3 id="Update-Logic"><a href="#Update-Logic" class="headerlink" title="Update Logic"></a>Update Logic</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// AS-IS : Oracle</span></span><br><span class="line">CLOB clobComment = <span class="keyword">null</span>;</span><br><span class="line">String comment = <span class="string">&quot;Update Server Comment&quot;</span>; <span class="comment">// Comment</span></span><br><span class="line"></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">pstmt.setString(<span class="number">1</span>, id);</span><br><span class="line">rs = pstmt.executeQuery();</span><br><span class="line"><span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">	clobComment = ((OracleResultSet)rs).getCLOB(<span class="string">&quot;COMMENT&quot;</span>);</span><br><span class="line">	<span class="keyword">int</span> length = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> chunk = clobComment.getChunkSize();</span><br><span class="line">	<span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[chunk];</span><br><span class="line">	Writer writer = clobComment.getCharacterOutputStream();</span><br><span class="line">	StringReader reader = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">	<span class="keyword">while</span> ((length = reader.read(buffer, <span class="number">0</span>, chunk)) != -<span class="number">1</span>) &#123;</span><br><span class="line">		writer.write(buffer, <span class="number">0</span>, length);</span><br><span class="line">	&#125;</span><br><span class="line">	reader.close();</span><br><span class="line">	writer.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// TO-BE : Tibero</span></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">StringReader srClob = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">pstmt.setCharacterStream(<span class="number">1</span>, srClob, comment.getBytes().length);</span><br><span class="line">pstmt.setString(<span class="number">2</span>, id);</span><br><span class="line">pstmt.executeUpdate();</span><br></pre></td></tr></table></figure>
-
-<h3 id="Delete-SQL-amp-Logic"><a href="#Delete-SQL-amp-Logic" class="headerlink" title="Delete SQL &amp; Logic"></a>Delete SQL &amp; Logic</h3><p>Row Delete는 기존과 동일하므로 생략.</p>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>Database</category>
-        <category>Migration</category>
-      </categories>
-      <tags>
-        <tag>Database</tag>
-        <tag>Migration</tag>
-        <tag>Oracle</tag>
-        <tag>Tibero</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Oracle lock select and clear</title>
     <url>/2017/08/24/dev/database/oracle/oracle_lock_select_and_clear/</url>
     <content><![CDATA[<h2 id="Lock-Select-SQL"><a href="#Lock-Select-SQL" class="headerlink" title="Lock Select SQL"></a>Lock Select SQL</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- DB SESSION CHECK</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> V$<span class="keyword">SESSION</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- DB SESSION QUERY</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	A.SID,		<span class="comment">-- SID</span></span><br><span class="line">	A.SERIAL<span class="comment">#,	-- 시리얼번호</span></span><br><span class="line">	A.STATUS,	<span class="comment">-- 상태정보</span></span><br><span class="line">	A.PROCESS,	<span class="comment">-- 프로세스정보</span></span><br><span class="line">	A.USERNAME,	<span class="comment">-- 유저</span></span><br><span class="line">	A.OSUSER,	<span class="comment">-- 접속자의 OS 사용자 정보</span></span><br><span class="line">	B.SQL_TEXT,	<span class="comment">-- SQL</span></span><br><span class="line">	C.PROGRAM	<span class="comment">-- 접속 프로그램</span></span><br><span class="line"><span class="keyword">FROM</span> V$<span class="keyword">SESSION</span> A, V$SQLAREA B, V$PROCESS C</span><br><span class="line"><span class="keyword">WHERE</span> A.SQL_HASH_VALUE = B.HASH_VALUE</span><br><span class="line"><span class="keyword">AND</span> A.SQL_ADDRESS = B.ADDRESS</span><br><span class="line"><span class="keyword">AND</span> A.PADDR = C.ADDR</span><br><span class="line"><span class="keyword">AND</span> A.STATUS = <span class="string">&#x27;ACTIVE&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- USER SESSION KILL</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">SYSTEM</span> <span class="keyword">KILL</span> <span class="keyword">SESSION</span> <span class="string">&#x27;SID, 시리얼번호&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- SELECT &amp; KILL SQL</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	<span class="keyword">DISTINCT</span> X.SESSION_ID</span><br><span class="line">	, A.SERIAL<span class="comment">#,</span></span><br><span class="line">	, D.OBJECT_NAME</span><br><span class="line">	, A.MACHINE</span><br><span class="line">	, A.TERMINAL</span><br><span class="line">	, A.PROGRAM</span><br><span class="line">	, A.LOGON_TIME</span><br><span class="line">	, <span class="string">&#x27;ALTER SYSTEM KILL SESSION &#x27;&#x27;&#x27;</span> || A.SID || <span class="string">&#x27;,  &#x27;</span> || A.SERIAL<span class="comment"># || &#x27;&#x27;&#x27;;&#x27;</span></span><br><span class="line"><span class="keyword">FROM</span> GV$LOCKED_OBJECT X, GV$<span class="keyword">SESSION</span> A,  DBA_OBJECTS D</span><br><span class="line"><span class="keyword">WHERE</span> X.SESSION_ID = A.SID</span><br><span class="line"><span class="keyword">AND</span> X.OBJECT_ID = D.OBJECT_ID</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> LOGON_TIME;</span><br></pre></td></tr></table></figure>]]></content>
@@ -518,38 +338,23 @@
       </tags>
   </entry>
   <entry>
-    <title>Oracle Use Instant Client</title>
-    <url>/2017/08/24/dev/database/oracle/oracle_use_instant_client/</url>
-    <content><![CDATA[<p>Oracle Client Potable 이라고 지칭 하는건 따로 존재하지 않고<br>Instant Client Version이 존재하며 다운페이지는 다음과 같습니다.<br><a href="http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html">Oracle Instant Client</a></p>
-<h2 id="Process"><a href="#Process" class="headerlink" title="Process"></a>Process</h2><p>설명하는 환경은 Windows 64bit에서 Toad사용 기준 설명입니다.</p>
-<ol>
-<li>Instant Client for Microsoft Windows</li>
-<li>32bit, 64bit는 Toad의 Version에 맞춰 다운로드<ul>
-<li>Windows 64bit, Toad 32bit라면<br>Instant Client for Microsoft Windows (32-bit)를 Download하여 설치합니다</li>
-<li>Cannot load OCI DLL<br>C:\oracle\product\11.2.0\client_1\oci.dll<br>DB연결시 OCI.dll 에러가 날시 toad와 client 버전이 맞지 않는다는 의미입니다.</li>
-</ul>
-</li>
-<li>Download file을 적당한 위치에 압축해제<ul>
-<li>ex) C:\oracle\product\11.2.0\client_1</li>
-</ul>
-</li>
-<li>환경변수 설정 : 시스템 변수에 아래의 내용을 추가합니다.</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ORACLE_HOME : C:\oracle\product\11.2.0\client_1</span><br><span class="line">TNS_ADMIN : C:\oracle\product\11.2.0\client_1\network\admin\</span><br><span class="line">Path : C:\oracle\product\11.2.0\client_1</span><br><span class="line">NLS_LANG : KOREAN_KOREA.KO16MSWIN949</span><br></pre></td></tr></table></figure>
+    <title>IBM PDA Netezza - 유저 관련 SQL</title>
+    <url>/2018/01/29/dev/database/ibm_pda/ibm_netezza_user_sql/</url>
+    <content><![CDATA[<p>IBM PDA (Pure Data Analytics) NETEZZA 의 유저 관련 SQL입니다</p>
+<h2 id="User"><a href="#User" class="headerlink" title="User"></a>User</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 유저 생성</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> &#123;account_name&#125; <span class="keyword">WITH</span> <span class="keyword">PASSWORD</span> &#123;<span class="keyword">password</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 삭제</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">USER</span> &#123;account_name&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 패스워드 변경</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> &#123;account_name&#125; <span class="keyword">WITH</span> <span class="keyword">PASSWORD</span> &#123;<span class="keyword">password</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 계정 만료기간 지정</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> &#123;account_name&#125; <span class="keyword">WITH</span> VALID <span class="keyword">UNTIL</span> &#123;<span class="built_in">date</span>(yyyy-mm-dd hh:mm:ss)&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 계정 만료기간 제거</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> &#123;account_name&#125; <span class="keyword">WITH</span> VALID <span class="keyword">UNTIL</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 계정 비밀번호 즉시 만료 (비밀번호 만료시 password를 변경하여 해제 가능)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> &#123;account_name&#125; <span class="keyword">EXPIRE</span> <span class="keyword">PASSWORD</span>;</span><br></pre></td></tr></table></figure>
 
-<ol start="5">
-<li>주의 사항<br>위의 환경변수 path는 예제일뿐 동일하게 해서는 안됩니다.<br>Path가 기존에 존재 하는경우 수정을 해야하는데 예를들어<br>C:\example 이 존재한다면 구분자로 “;”을 추가하여 다음과 같이 변경해야 합니다.<br>C:\example<font color="red"><strong>;</strong></font>C:\oracle\product\11.2.0\client_1</li>
-</ol>
+<h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 유저 생성</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> TESTUSER <span class="keyword">WITH</span> <span class="keyword">PASSWORD</span> <span class="string">&#x27;password&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 삭제</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">USER</span> TESTUSER;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 패스워드 변경</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> TESTUSER <span class="keyword">WITH</span> <span class="keyword">PASSWORD</span> <span class="string">&#x27;password&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 계정 만료기간 지정</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> TESTUSER <span class="keyword">WITH</span> VALID <span class="keyword">UNTIL</span> <span class="string">&#x27;2018-01-29 23:59:59&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 계정 만료기간 제거</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> TESTUSER <span class="keyword">WITH</span> VALID <span class="keyword">UNTIL</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 유저 계정 비밀번호 즉시 만료 (비밀번호 만료시 password를 변경하여 해제 가능)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> TESTUSER <span class="keyword">EXPIRE</span> <span class="keyword">PASSWORD</span>;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Dev</category>
         <category>Database</category>
-        <category>Oracle</category>
+        <category>IBM PDA</category>
       </categories>
       <tags>
         <tag>Database</tag>
-        <tag>Oracle</tag>
-        <tag>Instant Client</tag>
+        <tag>User</tag>
+        <tag>IBM PDA</tag>
+        <tag>NETEZZA</tag>
       </tags>
   </entry>
   <entry>
@@ -597,6 +402,201 @@
         <tag>Oracle</tag>
         <tag>Windows</tag>
         <tag>ODBC</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Oracle Use Instant Client</title>
+    <url>/2017/08/24/dev/database/oracle/oracle_use_instant_client/</url>
+    <content><![CDATA[<p>Oracle Client Potable 이라고 지칭 하는건 따로 존재하지 않고<br>Instant Client Version이 존재하며 다운페이지는 다음과 같습니다.<br><a href="http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html">Oracle Instant Client</a></p>
+<h2 id="Process"><a href="#Process" class="headerlink" title="Process"></a>Process</h2><p>설명하는 환경은 Windows 64bit에서 Toad사용 기준 설명입니다.</p>
+<ol>
+<li>Instant Client for Microsoft Windows</li>
+<li>32bit, 64bit는 Toad의 Version에 맞춰 다운로드<ul>
+<li>Windows 64bit, Toad 32bit라면<br>Instant Client for Microsoft Windows (32-bit)를 Download하여 설치합니다</li>
+<li>Cannot load OCI DLL<br>C:\oracle\product\11.2.0\client_1\oci.dll<br>DB연결시 OCI.dll 에러가 날시 toad와 client 버전이 맞지 않는다는 의미입니다.</li>
+</ul>
+</li>
+<li>Download file을 적당한 위치에 압축해제<ul>
+<li>ex) C:\oracle\product\11.2.0\client_1</li>
+</ul>
+</li>
+<li>환경변수 설정 : 시스템 변수에 아래의 내용을 추가합니다.</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ORACLE_HOME : C:\oracle\product\11.2.0\client_1</span><br><span class="line">TNS_ADMIN : C:\oracle\product\11.2.0\client_1\network\admin\</span><br><span class="line">Path : C:\oracle\product\11.2.0\client_1</span><br><span class="line">NLS_LANG : KOREAN_KOREA.KO16MSWIN949</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>주의 사항<br>위의 환경변수 path는 예제일뿐 동일하게 해서는 안됩니다.<br>Path가 기존에 존재 하는경우 수정을 해야하는데 예를들어<br>C:\example 이 존재한다면 구분자로 “;”을 추가하여 다음과 같이 변경해야 합니다.<br>C:\example<font color="red"><strong>;</strong></font>C:\oracle\product\11.2.0\client_1</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>Database</category>
+        <category>Oracle</category>
+      </categories>
+      <tags>
+        <tag>Database</tag>
+        <tag>Oracle</tag>
+        <tag>Instant Client</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Jira - Backup</title>
+    <url>/2019/09/14/dev/devops/jira/backup/</url>
+    <content><![CDATA[<p>Jira를 backup 하는 방법에 대해 알아봅시다.<br>Jira의 경우 단순히 data 폴더를 덮어씌우는 경우 제대로 되지 않는 경우가 있기 때문에<br>Backup &amp; Restore 를 하는게 좋습니다.</p>
+<h1 id="Backup"><a href="#Backup" class="headerlink" title="Backup"></a>Backup</h1><p><img data-src="/image/dev/devops/jira/backup/1.png" alt="1"></p>
+<ul>
+<li><code>시스템</code> 메뉴로 이동</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/jira/backup/2.png" alt="2"></p>
+<ul>
+<li><code>시스템 백업</code> 메뉴 이동</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/jira/backup/3.png" alt="3"></p>
+<ul>
+<li>파일 이름 : 백업 결과물 파일 이름 입력.</li>
+<li><code>백업</code> 버튼 클릭하여 백업.</li>
+</ul>
+<hr>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root ~]<span class="comment"># cd /var/atlassian/application-data/jira/export</span></span><br><span class="line">[root <span class="built_in">export</span>]<span class="comment"># ls</span></span><br><span class="line">2019-09-14-0136.zip</span><br></pre></td></tr></table></figure>
+<ul>
+<li>지정한 파일 이름으로 zip 압축 파일이 생성됩니다.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>DevOps</category>
+        <category>Jira</category>
+      </categories>
+      <tags>
+        <tag>Jira</tag>
+        <tag>Backup</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Oracle to Tibero Migration SQL</title>
+    <url>/2017/08/24/dev/database/migration/oracle_to_tibero_migration_sql/</url>
+    <content><![CDATA[<p>프로젝트에서 기존 사용하던 Oracle License를 다른 서비스에서 사용하기로 하여<br>Oracle 에서 Tibero 이관작업을 진행하면서 내용들을 정리한 내용입니다.</p>
+<h2 id="Escalation"><a href="#Escalation" class="headerlink" title="Escalation"></a>Escalation</h2><h3 id="Insert-SQL"><a href="#Insert-SQL" class="headerlink" title="Insert SQL"></a>Insert SQL</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- AS-IS : Oracle</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">SERVER</span> (</span><br><span class="line">	<span class="keyword">ID</span></span><br><span class="line">	, CODE</span><br><span class="line">	, HOSTNAME</span><br><span class="line">	, <span class="keyword">STATUS</span></span><br><span class="line">	, <span class="keyword">COMMENT</span></span><br><span class="line">) <span class="keyword">VALUES</span> (</span><br><span class="line">	?, ?, ?, ?, EMPTY_CLOB()</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	<span class="keyword">COMMENT</span></span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">SERVER</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">UPDATE</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- TO-BE : Tibero</span></span><br><span class="line"><span class="comment">-- (1) Oracle과 다르게 최초 초기화 하지 않고 직접 Bind 할수있습니다.</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">SERVER</span> (</span><br><span class="line">	<span class="keyword">ID</span></span><br><span class="line">	, CODE</span><br><span class="line">	, HOSTNAME</span><br><span class="line">	, <span class="keyword">STATUS</span></span><br><span class="line">	, <span class="keyword">COMMENT</span></span><br><span class="line">) <span class="keyword">VALUES</span> (</span><br><span class="line">	?, ?, ?, ?, ?</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- Tibero는 COMMENT를 SQL에서 BIND할수 있지만 개인적으론 동일하게 EMPTY_CLOB() 초기화를 추천합니다.</span></span><br><span class="line"><span class="comment">-- (2) 초기화 후 할 경우</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">SERVER</span> <span class="keyword">SET</span></span><br><span class="line">	<span class="keyword">COMMENT</span> = ?</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br></pre></td></tr></table></figure>
+
+<h3 id="Insert-Logic"><a href="#Insert-Logic" class="headerlink" title="Insert Logic"></a>Insert Logic</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// AS-IS : Oracle</span></span><br><span class="line">String comment = <span class="string">&quot;Server Commnet&quot;</span>; <span class="comment">// input comment</span></span><br><span class="line">CLOB clob = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">pstmt.setString(<span class="number">1</span>, id);</span><br><span class="line">rs = pstmt.executeQuery();</span><br><span class="line"><span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">	clob = ((OracleResultSet)rs).getCLOB(<span class="string">&quot;COMMENT&quot;</span>);</span><br><span class="line">	<span class="keyword">int</span> length = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> chunk = clob.getChunkSize();</span><br><span class="line">	<span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[chunk];</span><br><span class="line">	Writer writer = clob.getCharacterOutputStream();</span><br><span class="line">	StringReader sr = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">	<span class="keyword">while</span> ((length = sr.read(buffer, <span class="number">0</span>, chunk)) != -<span class="number">1</span>) &#123;</span><br><span class="line">		writer.write(buffer, <span class="number">0</span>, length);</span><br><span class="line">	&#125;</span><br><span class="line">	sr.close();</span><br><span class="line">	writer.close();</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">// TO-BE : Tibero</span></span><br><span class="line"><span class="comment">// (1) Oracle과 다르게 최초 초기화 하지않고 직접 Bind 할수있습니다.</span></span><br><span class="line">String comment = <span class="string">&quot;Master Server&quot;</span>; <span class="comment">// input comment</span></span><br><span class="line"></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">StringReader srClob = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">pstmt.setString(<span class="number">1</span>, id);</span><br><span class="line">pstmt.setString(<span class="number">2</span>, code);</span><br><span class="line">pstmt.setString(<span class="number">3</span>, hostname);</span><br><span class="line">pstmt.setString(<span class="number">4</span>, status);</span><br><span class="line">pstmt.setCharacterStream(<span class="number">5</span>, srClob, comment.getBytes().length);</span><br><span class="line">pstmt.executeUpdate();</span><br><span class="line"></span><br><span class="line"><span class="comment">// (2) 초기화 후 할 경우</span></span><br><span class="line">String comment = <span class="string">&quot;Master Server&quot;</span>; <span class="comment">// input comment</span></span><br><span class="line"></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">StringReader srClob = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">pstmt.setCharacterStream(<span class="number">1</span>, srClob, comment.getBytes().length);</span><br><span class="line">pstmt.setString(<span class="number">2</span>, id);</span><br><span class="line">pstmt.executeUpdate();</span><br></pre></td></tr></table></figure>
+
+<h3 id="Select-SQL"><a href="#Select-SQL" class="headerlink" title="Select SQL"></a>Select SQL</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- SQL은 변동 사항이 없습니다.</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	<span class="keyword">COMMENT</span></span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">SERVER</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br></pre></td></tr></table></figure>
+
+<h3 id="Select-Logic"><a href="#Select-Logic" class="headerlink" title="Select Logic"></a>Select Logic</h3><p>주의할점은 Tibero에서 사용하는 CLOB class가 틀리며 Method 대소문자도 틀리므로<br>소스단위에서 정확하게 수정해야합니다.<br>그리고 Tibero에서 TbClob가 null이 아니며 length가 0 이상일때만 값을 세팅하는 이유는<br>Tibero 자체 버그때문에 Null이 아니더라도 length가 0일때가 있으며<br>0일때 단순한 white space가 아닌 이상한 쓰레기 값이 들어올 때가 있기 때문에 주의해야합니다.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// AS-IS : Oracle</span></span><br><span class="line">CLOB clobComment = <span class="keyword">null</span>;</span><br><span class="line">String comment = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (rs.next()) &#123;</span><br><span class="line">	clobComment = ((OracleResultSet)rs).getCLOB(<span class="string">&quot;COMMENT&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (clobComment != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">int</span> textLength = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">int</span> chunk = clobComment.getChunkSize();</span><br><span class="line">		<span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[chunk];</span><br><span class="line">		StringWriter sw = <span class="keyword">new</span> StringWriter();</span><br><span class="line">		Reader reader = clobComment.getCharacterStream();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">while</span> ((textLength = reader.read(bufffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">			sw.write(buffer, <span class="number">0</span>, textLength);</span><br><span class="line">		&#125;</span><br><span class="line">		comment = sw.toString();</span><br><span class="line">		sw.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// TO-BE : Tibero</span></span><br><span class="line">TbClob clobComment = <span class="keyword">null</span>; <span class="comment">//BLOB 일때는 TbBlob</span></span><br><span class="line">String comment = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (rs.next()) &#123;</span><br><span class="line">	clobComment = (TbClog)((TbResultSet)rs).getClob(<span class="string">&quot;COMMENT&quot;</span>);</span><br><span class="line">	<span class="keyword">int</span> lobLength = clobComment.length();</span><br><span class="line">	<span class="keyword">if</span> (clobComment != <span class="keyword">null</span> &amp;&amp; lobLength &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="keyword">int</span> textLength = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[lobLength];</span><br><span class="line">		StringWriter sw = <span class="keyword">new</span> StringWriter();</span><br><span class="line">		Reader reader = clobComment.getCharacterStream();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">while</span> ((textLength = reader.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">			sw.write(buffer, <span class="number">0</span>, textLength);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		comment = sw.toString();</span><br><span class="line">		sw.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Update-SQL"><a href="#Update-SQL" class="headerlink" title="Update SQL"></a>Update SQL</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- AS-IS : Oracle</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">SERVER</span> <span class="keyword">SET</span></span><br><span class="line">	CODE = ?,</span><br><span class="line">	HOSTNAME = ?,</span><br><span class="line">	<span class="keyword">STATUS</span> = ?,</span><br><span class="line">	<span class="keyword">COMMENT</span> = EMPTY_CLOB()</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	<span class="keyword">COMMENT</span></span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">SERVER</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">UPDATE</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- TO-BE : Tibero</span></span><br><span class="line"><span class="comment">-- 초기화 동시에 세팅</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">SERVER</span> <span class="keyword">SET</span></span><br><span class="line">	CODE = ?,</span><br><span class="line">	HOSTNAME = ?,</span><br><span class="line">	<span class="keyword">STATUS</span> = ?,</span><br><span class="line">	<span class="keyword">COMMENT</span> = ?</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br><span class="line"></span><br><span class="line"><span class="comment">-- Oracle과 동일하게 EMPTY_CLOB()로 초기화 후 UPDATE도 가능합니다</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">SERVER</span> <span class="keyword">SET</span></span><br><span class="line">	<span class="keyword">COMMENT</span> = ?</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">ID</span> = ?</span><br></pre></td></tr></table></figure>
+
+<h3 id="Update-Logic"><a href="#Update-Logic" class="headerlink" title="Update Logic"></a>Update Logic</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// AS-IS : Oracle</span></span><br><span class="line">CLOB clobComment = <span class="keyword">null</span>;</span><br><span class="line">String comment = <span class="string">&quot;Update Server Comment&quot;</span>; <span class="comment">// Comment</span></span><br><span class="line"></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">pstmt.setString(<span class="number">1</span>, id);</span><br><span class="line">rs = pstmt.executeQuery();</span><br><span class="line"><span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">	clobComment = ((OracleResultSet)rs).getCLOB(<span class="string">&quot;COMMENT&quot;</span>);</span><br><span class="line">	<span class="keyword">int</span> length = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> chunk = clobComment.getChunkSize();</span><br><span class="line">	<span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[chunk];</span><br><span class="line">	Writer writer = clobComment.getCharacterOutputStream();</span><br><span class="line">	StringReader reader = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">	<span class="keyword">while</span> ((length = reader.read(buffer, <span class="number">0</span>, chunk)) != -<span class="number">1</span>) &#123;</span><br><span class="line">		writer.write(buffer, <span class="number">0</span>, length);</span><br><span class="line">	&#125;</span><br><span class="line">	reader.close();</span><br><span class="line">	writer.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// TO-BE : Tibero</span></span><br><span class="line">pstmt = con.prepareStatement(sql);</span><br><span class="line">StringReader srClob = <span class="keyword">new</span> StringReader(comment);</span><br><span class="line">pstmt.setCharacterStream(<span class="number">1</span>, srClob, comment.getBytes().length);</span><br><span class="line">pstmt.setString(<span class="number">2</span>, id);</span><br><span class="line">pstmt.executeUpdate();</span><br></pre></td></tr></table></figure>
+
+<h3 id="Delete-SQL-amp-Logic"><a href="#Delete-SQL-amp-Logic" class="headerlink" title="Delete SQL &amp; Logic"></a>Delete SQL &amp; Logic</h3><p>Row Delete는 기존과 동일하므로 생략.</p>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>Database</category>
+        <category>Migration</category>
+      </categories>
+      <tags>
+        <tag>Database</tag>
+        <tag>Oracle</tag>
+        <tag>Migration</tag>
+        <tag>Tibero</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Jira - Restore</title>
+    <url>/2019/09/15/dev/devops/jira/restore/</url>
+    <content><![CDATA[<p>Jira를 restore 하는 방법에 대해 알아봅시다.</p>
+<h1 id="Restore"><a href="#Restore" class="headerlink" title="Restore"></a>Restore</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root ~]<span class="comment"># cd /var/atlassian/application-data/jira/export</span></span><br><span class="line">[root <span class="built_in">export</span>]<span class="comment"># ls</span></span><br><span class="line">2019-09-14-0136.zip</span><br><span class="line">[root <span class="built_in">export</span>]<span class="comment"># cp 2019-09-14-0136.zip ../import</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>export에 생성된 백업 파일을 import 경로에 복사합니다.</li>
+<li>docker 사용시 볼륨에서 동일하게 복사합니다.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/jira/restore/1.png" alt="1"></p>
+<ul>
+<li><code>시스템</code> 메뉴로 이동</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/jira/restore/2.png" alt="2"></p>
+<ul>
+<li><code>시스템 복원</code> 메뉴 이동</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/jira/restore/3.png" alt="3"></p>
+<ul>
+<li>파일 이름 : 이전에 백업한 파일명 입력.</li>
+<li><code>복원</code> 버튼 클릭하여 복원.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/jira/restore/4.png" alt="4"><br><img data-src="/image/dev/devops/jira/restore/5.png" alt="5"></p>
+<ul>
+<li>복구가 정상적으로 되었는지 확인합니다.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>DevOps</category>
+        <category>Jira</category>
+      </categories>
+      <tags>
+        <tag>Jira</tag>
+        <tag>Restore</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Jira - Installed to Docker</title>
+    <url>/2019/09/16/dev/devops/jira/jira_to_docker/</url>
+    <content><![CDATA[<p>기존 설치형 Jira를 Docker로 변경 하는 방법을 알아봅시다.</p>
+<h1 id="Installed-Jira"><a href="#Installed-Jira" class="headerlink" title="Installed Jira"></a>Installed Jira</h1><p>설치형에서 docker로 변경하기 위해 필요한 파일과 구조를 파악해야 합니다.</p>
+<h2 id="Tomcat-기반-구동-파일들이-있는-곳"><a href="#Tomcat-기반-구동-파일들이-있는-곳" class="headerlink" title="Tomcat 기반 구동 파일들이 있는 곳."></a>Tomcat 기반 구동 파일들이 있는 곳.</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root ~]<span class="comment"># cd /opt/atlassian/jira</span></span><br><span class="line">[root <span class="built_in">export</span>]<span class="comment"># ls</span></span><br><span class="line">BUILDING.txt     README.html  atlassian-jira  external-source  lib  temp         webapps</span><br><span class="line">CONTRIBUTING.md  README.md    bin             install.reg      licenses  tomcat-docs  work</span><br><span class="line">NOTICE           README.txt   conf            jre              logs      uninstall</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Jira (8.4 기준) Servlet, Soy view template, JSP, JQuery, Tomcat 8.x 사용하고 있습니다.</li>
+<li>bin : application 설정 파일과 application script 파일들이 있는 폴더.</li>
+<li>conf : tomcat 설정 파일들이 있는 폴더.</li>
+<li>jre : OpenJDK jre가 있는 폴더.</li>
+<li>logs : log 파일들이 있는 폴더.</li>
+<li>licenses : jira에서 사용중인 license text 파일(사용중인 오픈소스 libraries의 license text 입니다, Atlassian License가 아닙니다.)</li>
+</ul>
+<h2 id="첨부파일-plugin-등의-data-파일이-있는-곳"><a href="#첨부파일-plugin-등의-data-파일이-있는-곳" class="headerlink" title="첨부파일, plugin 등의 data 파일이 있는 곳."></a>첨부파일, plugin 등의 data 파일이 있는 곳.</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root ~]<span class="comment"># cd /var/atlassian/application-data/jira</span></span><br><span class="line">[root jira]<span class="comment"># ls</span></span><br><span class="line">analytics-logs  <span class="built_in">export</span>                     monitor</span><br><span class="line">caches          import                     plugins</span><br><span class="line">customisations  jira-healthcheck-eol.json  tmp</span><br><span class="line">data            <span class="built_in">log</span></span><br><span class="line">dbconfig.xml    logos</span><br></pre></td></tr></table></figure>
+<ul>
+<li>data : 첨부파일 및 각종 아바타 이미지들이 있는 폴더.</li>
+<li>export : 시스템 백업시 생성되는 파일이 존재하는 폴더.</li>
+<li>import : 시스템 복구시 백업 파일을 로드하는 폴더.</li>
+<li>plugin : 플러그인이 있는 폴더.</li>
+<li>dbconfig.xml : database 정보가 있습니다.</li>
+</ul>
+<blockquote>
+<p><strong>자세한 내용은</strong><a href="https://confluence.atlassian.com/adminjiraserver073/jira-application-home-directory-861253888.html">Jira Home And other important directories</a><strong>에서 확인하시면 좋습니다.</strong></p>
+</blockquote>
+<h1 id="Docker-Jira"><a href="#Docker-Jira" class="headerlink" title="Docker Jira"></a>Docker Jira</h1><p>이제 본격적으로 docker로 변환하는 과정의 내용입니다.</p>
+<h2 id="Docker-Image"><a href="#Docker-Image" class="headerlink" title="Docker Image"></a>Docker Image</h2><p>Atlassian에서 <a href="https://hub.docker.com/r/atlassian/jira-software">Jira Software Docker Image</a>를 제공하고 있고, 8.4를 사용하였습니다.</p>
+<h2 id="순서"><a href="#순서" class="headerlink" title="순서"></a>순서</h2><ul>
+<li>RDS 스냅샷 생성.</li>
+<li>Jira Backup</li>
+<li>Docker Compose yml 작성</li>
+<li>application-data 복사하여 덮어쓰기</li>
+<li>Directory owner 변경</li>
+<li>Docker Container 생성 및 시작</li>
+<li>Jira Restore.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/jira/restore/1.png" alt="1"></p>
+<ul>
+<li><code>시스템</code> 메뉴로 이동</li>
+</ul>
+<p><a href="/2019/09/14/dev/devops/jira/backup/">Jira Backup</a><br><a href="/2019/09/06/dev/devops/aws/database/rds/snapshot/create/">RDS 스냅샷 생성</a><br><a href="/2019/09/15/dev/devops/jira/restore/">Jira Restore</a></p>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>DevOps</category>
+        <category>Jira</category>
+      </categories>
+      <tags>
+        <tag>Jira</tag>
+        <tag>Docker</tag>
       </tags>
   </entry>
   <entry>
@@ -875,6 +875,47 @@
       </tags>
   </entry>
   <entry>
+    <title>RDS - Snapshot Create</title>
+    <url>/2019/09/06/dev/devops/aws/database/rds/snapshot/create/</url>
+    <content><![CDATA[<p>RDS를 Snapshot을 생성하는 방법에 대해 알아봅니다.</p>
+<h1 id="Snapshot-Create"><a href="#Snapshot-Create" class="headerlink" title="Snapshot Create"></a>Snapshot Create</h1><p><img data-src="/image/dev/devops/aws/rds/snapshot/create/1.png" alt="1"></p>
+<ul>
+<li><code>RDS</code> 메뉴 이동</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/rds/snapshot/create/2.png" alt="2"></p>
+<ul>
+<li><code>스냅샷</code> 메뉴 이동.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/rds/snapshot/create/3.png" alt="3"></p>
+<ul>
+<li><code>스냅샷 만들기</code> 클릭.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/rds/snapshot/create/4.png" alt="4"></p>
+<ul>
+<li>DB인스턴스 : 스냅샷을 생성할 DB 인스턴스 선택.</li>
+<li>스냅샷 이름 : 이름</li>
+<li><code>스냅샷 만들기</code></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>DevOps</category>
+        <category>AWS</category>
+        <category>Database</category>
+        <category>RDS</category>
+        <category>Snapshot</category>
+      </categories>
+      <tags>
+        <tag>Database</tag>
+        <tag>AWS</tag>
+        <tag>RDS</tag>
+        <tag>Snapshot</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RDS - Create</title>
     <url>/2019/08/05/dev/devops/aws/database/rds/create/rds-create/</url>
     <content><![CDATA[<p>Amazon Relational Database Service(RDS)를 사용하면 클라우드에서 관계형 데이터베이스를 간편하게 설정, 운영 및 확장할 수 있습니다.<br>하드웨어 프로비저닝, 데이터베이스 설정, 패치 및 백업과 같은 시간 소모적인 관리 작업을 자동화하면서 비용 효율적이고 크기 조정 가능한 용량을 제공합니다.<br>사용자가 애플리케이션에 집중하여 애플리케이션에 필요한 빠른 성능, 고가용성, 보안 및 호환성을 제공할 수 있도록 지원합니다.</p>
@@ -959,110 +1000,6 @@
       </tags>
   </entry>
   <entry>
-    <title>RDS - Snapshot Create</title>
-    <url>/2019/09/06/dev/devops/aws/database/rds/snapshot/create/</url>
-    <content><![CDATA[<p>RDS를 Snapshot을 생성하는 방법에 대해 알아봅니다.</p>
-<h1 id="Snapshot-Create"><a href="#Snapshot-Create" class="headerlink" title="Snapshot Create"></a>Snapshot Create</h1><p><img data-src="/image/dev/devops/aws/rds/snapshot/create/1.png" alt="1"></p>
-<ul>
-<li><code>RDS</code> 메뉴 이동</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/rds/snapshot/create/2.png" alt="2"></p>
-<ul>
-<li><code>스냅샷</code> 메뉴 이동.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/rds/snapshot/create/3.png" alt="3"></p>
-<ul>
-<li><code>스냅샷 만들기</code> 클릭.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/rds/snapshot/create/4.png" alt="4"></p>
-<ul>
-<li>DB인스턴스 : 스냅샷을 생성할 DB 인스턴스 선택.</li>
-<li>스냅샷 이름 : 이름</li>
-<li><code>스냅샷 만들기</code></li>
-</ul>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>DevOps</category>
-        <category>AWS</category>
-        <category>Database</category>
-        <category>RDS</category>
-        <category>Snapshot</category>
-      </categories>
-      <tags>
-        <tag>Database</tag>
-        <tag>AWS</tag>
-        <tag>RDS</tag>
-        <tag>Snapshot</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>CloudFront - Configuration Domain</title>
-    <url>/2019/08/18/dev/devops/aws/network-contents/cloud-front/config/cloud-front-domain/</url>
-    <content><![CDATA[<p>기본적으로 설정되는 CloudFront Domain이 아닌 특정서비스의 sub domain으로 사용하기 위해서 이며,<br>추가적인 설정에 따라서 CORS 등등 을 하기 위해서도 필요합니다.<br>예를들어 <code>example.com</code>을 domain을 사용하는 서비스가 있을때 <code>cdn.example.com</code>으로 사용하는 것처럼 말이죠.</p>
-<hr>
-<h1 id="Route53-Record-Set"><a href="#Route53-Record-Set" class="headerlink" title="Route53 - Record Set"></a>Route53 - Record Set</h1><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/1.png" alt="1"></p>
-<ul>
-<li>생성하려는 Domain 연결을 위해 Route53에서 Record Set을 추가합니다<br>자세한 내용은 <a href="/2019/08/02/dev/infra/aws/network-contents/route53/record-set/route53-record-set/">Route53 - Record Set</a> 를 참조 하세요.</li>
-</ul>
-<hr>
-<h1 id="ACM-for-Lambda-Edge"><a href="#ACM-for-Lambda-Edge" class="headerlink" title="ACM for Lambda@Edge"></a>ACM for Lambda@Edge</h1><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/2.png" alt="2"></p>
-<ul>
-<li><code>Lambda@Edge</code>를 사용할 예정이 없다면 건너뛰어도 됩니다.</li>
-<li><code>CloudFront</code>에 domain 설정시 특정 domain의 sub domain으로 사용하기 위해 해당 domain의 ACM이 필요합니다.</li>
-<li><code>ACM</code>은 추후 <code>Lambda@Edge</code>를 사용하기 위해 <code>us-east-1</code>에 인증서를 생성하여 사용.<br>자세한 내용은 <a href="/2019/08/02/dev/infra/aws/security-credentials/acm/create/acm-create/">ACM - Create</a></li>
-</ul>
-<hr>
-<h1 id="CloudFront-Configuration-Domain"><a href="#CloudFront-Configuration-Domain" class="headerlink" title="CloudFront - Configuration Domain"></a>CloudFront - Configuration Domain</h1><h2 id="메뉴-이동"><a href="#메뉴-이동" class="headerlink" title="메뉴 이동"></a>메뉴 이동</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/3.png" alt="3"></p>
-<ul>
-<li>AWS 메인에서 <code>CloudFront</code>메뉴 이동.</li>
-</ul>
-<hr>
-<h2 id="CloundFront-Distribution"><a href="#CloundFront-Distribution" class="headerlink" title="CloundFront Distribution"></a>CloundFront Distribution</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/4.png" alt="4"></p>
-<ul>
-<li>Domain을 할당하려는 Distribution 상세로 이동.</li>
-</ul>
-<hr>
-<h2 id="General-Edit"><a href="#General-Edit" class="headerlink" title="General Edit"></a>General Edit</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/5.png" alt="5"></p>
-<ul>
-<li><code>General</code> Tab 클릭.</li>
-<li><code>Edit</code> 클릭.</li>
-</ul>
-<hr>
-<h2 id="Edit-Distribution"><a href="#Edit-Distribution" class="headerlink" title="Edit Distribution"></a>Edit Distribution</h2><h3 id="Distribution-Setting"><a href="#Distribution-Setting" class="headerlink" title="Distribution Setting"></a>Distribution Setting</h3><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/6.png" alt="6"></p>
-<ul>
-<li><code>Alternate Domain Names</code>에 사용하려는 Domain을 입력합니다.</li>
-<li><code>Custom SSL Certificate</code> 서비스하는 Domain의 sub domain으로 사용하려면 Custom SSL Certificate를 선택하세요.</li>
-<li>사용하려는 Domain의 SSL Certificate를 선택합니다.<br>주의할 점은 CloudFront는 region이 필요한 곳의 SSL Certificate를 사용하세요.<br>만약 <code>Lambda@Edge</code> 사용을 고려 중 이라면 반드시 상단의 <code>ACM for Lambda@Edge</code> 항목을 확인 후 적용 해야합니다. </li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/7.png" alt="7"></p>
-<ul>
-<li><code>Yes, Edit</code> 버튼을 클릭하여 저장합니다.</li>
-</ul>
-<hr>
-<h2 id="Check"><a href="#Check" class="headerlink" title="Check"></a>Check</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/8.png" alt="8"></p>
-<ul>
-<li>정상적으로 <code>Alternate Domain Names</code>, <code>SSL Certificate</code> 적용되었는지 확인합니다.</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>DevOps</category>
-        <category>AWS</category>
-        <category>Network And Contents</category>
-        <category>CloudFront</category>
-      </categories>
-      <tags>
-        <tag>AWS</tag>
-        <tag>Network And Contents</tag>
-        <tag>CloudFront</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>ECR - Create</title>
     <url>/2019/08/01/dev/devops/aws/computing/ecr/create/ecr-create/</url>
     <content><![CDATA[<p>Amazon Elastic Container Registry(ECR)는 개발자가 Docker 컨테이너 이미지를 손쉽게 저장, 관리 및 배포할 수 있게 해주는 완전관리형 Docker 컨테이너 레지스트리입니다.<br>Amazon ECR은 Amazon Elastic Container Service(ECS)와 통합되므로 개발에서 프로덕션까지의 워크플로를 간소화할 수 있습니다.<br>Amazon ECR을 사용하면 자체 컨테이너 리포지토리를 운영하거나 기본 인프라 확장에 대해 걱정할 필요가 없습니다.<br>Amazon ECR은 이미지를 가용성과 확장성이 뛰어난 아키텍처에 호스팅하여 애플리케이션을 위해 컨테이너를 안정적으로 배포할 수 있습니다.<br>또한, AWS Identity and Access Management(IAM)와 통합되어 각 리포지토리에 대한 리소스 수준의 제어를 제공합니다.<br>Amazon ECR에는 선수금이나 약정이 없습니다. 리포지토리에 저장한 데이터와 인터넷으로 전송한 데이터 양에 대한 요금만 지불합니다.<br>Reference : <a href="https://aws.amazon.com/ko/ecr/">AWS ECR</a></p>
@@ -1094,68 +1031,6 @@
         <tag>AWS</tag>
         <tag>Computing</tag>
         <tag>ECR</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>CloudFront - Create</title>
-    <url>/2019/08/18/dev/devops/aws/network-contents/cloud-front/create/cloud-front-create/</url>
-    <content><![CDATA[<p><code>CloudFront</code>는 .html, .css, .js 및 이미지 파일과 같은 정적 및 동적 웹 콘텐츠를 사용자에게 더 빨리 배포하도록 지원하는 웹 서비스입니다.<br><code>CloudFront</code>는 엣지 로케이션이라고 하는 데이터 센터의 전 세계 네트워크를 통해 콘텐츠를 제공하며,<br>서비스하는 콘텐츠를 사용자가 요청하면 지연 시간이 가장 낮은 엣지 로케이션으로 라우팅되므로 콘텐츠 전송 성능이 뛰어납니다.<br>예를들어 특정 이미지가 캐싱되기전에 100ms가 소요되었다면 <code>CloudFront</code>에 캐싱된 경우 1x ms가 소요될 정도로 성능 개선이 되기 때문에<br>Global Service뿐만 아니라 다양하게 사용하게됩니다.</p>
-<hr>
-<h1 id="CloudFront-Create"><a href="#CloudFront-Create" class="headerlink" title="CloudFront - Create"></a>CloudFront - Create</h1><h2 id="메뉴-이동"><a href="#메뉴-이동" class="headerlink" title="메뉴 이동"></a>메뉴 이동</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/1.png" alt="1"></p>
-<ul>
-<li>AWS 메인에서 <code>CloudFront</code>메뉴 이동.</li>
-</ul>
-<hr>
-<h2 id="CloundFront-Distribution"><a href="#CloundFront-Distribution" class="headerlink" title="CloundFront Distribution"></a>CloundFront Distribution</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/2.png" alt="2"></p>
-<ul>
-<li><code>Create Distribution</code>버튼 클릭.</li>
-<li>Create CloudFront라고 생각해도 무방.</li>
-</ul>
-<hr>
-<h2 id="Select-a-delivery-method-for-your-content"><a href="#Select-a-delivery-method-for-your-content" class="headerlink" title="Select a delivery method for your content."></a>Select a delivery method for your content.</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/3.png" alt="3"></p>
-<ul>
-<li>WEB 카테고리의 <code>Get Started</code>버튼을 클릭.</li>
-<li>WEB은 주로 Static, 즉 정적인 파일들을 서비스 할때 좋습니다.</li>
-<li>RTMP는 주로 Media 파일들, 스트리밍을 하려고 할 때 사용하는게 좋습니다.</li>
-</ul>
-<hr>
-<h2 id="Create-Distribution"><a href="#Create-Distribution" class="headerlink" title="Create Distribution"></a>Create Distribution</h2><h3 id="Origin-Setting"><a href="#Origin-Setting" class="headerlink" title="Origin Setting"></a>Origin Setting</h3><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/4.png" alt="4"></p>
-<ul>
-<li><code>Origin Domain Name</code>은 해당 항목을 클릭하거나 입력하려 하면 기존에 생성되어있는 S3 Bucket을 선택 할 수 있습니다.</li>
-<li><code>Origin ID</code>는 위의 <code>Origin Domain Name</code>에서 S3를 선택하면 자동 입력됩니다.</li>
-<li><code>Restrict Bucket Access</code>는 <code>Yes</code> 선택하여 bucket access를 제한합니다.</li>
-<li><code>Origin Access Identity</code>는 <code>Create a New Identity</code>를 선택하여 접근 하기 위한 identity를 생성 합니다. (무조건 적인 옵션은 아닙니다)</li>
-<li><code>Comment</code>는 Default prefix <code>access-identity</code> 에 해당 bucket 이름을 붙입니다.</li>
-<li><code>Grant Read Permissions on Bucket</code>는 <code>Yes, Update Bucket Policy</code>를 선택합니다.<br>S3 Bucket Policy에 CloudFront 에서 필요한 정책을 추가 합니다<br><code>No, I Will Update Permissions</code> 선택시 custom manual 입니다.</li>
-</ul>
-<hr>
-<h3 id="Default-Cache-Behavior-Settings"><a href="#Default-Cache-Behavior-Settings" class="headerlink" title="Default Cache Behavior Settings"></a>Default Cache Behavior Settings</h3><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/5.png" alt="5"></p>
-<ul>
-<li><code>Compress Object Automatically</code>는 <code>Yes</code>를 선택합니다.<br>해당 옵션 선택시 파일을 압축하여 제공하며 다운로드 성능을 더 개선 시킬 수 있습니다.<br>요청시 <code>Accept-Encoding: gzip</code> 이 포함되어 있어야 합니다<br>자세한 내용은 <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/ServingCompressedFiles.html">Serving Compressed Files</a> 참조 하세요.</li>
-</ul>
-<hr>
-<h3 id="Distribution-Settings"><a href="#Distribution-Settings" class="headerlink" title="Distribution Settings"></a>Distribution Settings</h3><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/6.png" alt="6"></p>
-<ul>
-<li>Default 설정 그대로 두면 됩니다.</li>
-<li><code>Create Distribution</code> 버튼을 클릭하여 생성합니다.</li>
-</ul>
-<hr>
-<h2 id="Check-Created"><a href="#Check-Created" class="headerlink" title="Check Created"></a>Check Created</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/7.png" alt="7"></p>
-<ul>
-<li>생성된 <code>Distribution</code>을 확인합니다.</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>DevOps</category>
-        <category>AWS</category>
-        <category>Network And Contents</category>
-        <category>CloudFront</category>
-      </categories>
-      <tags>
-        <tag>AWS</tag>
-        <tag>Network And Contents</tag>
-        <tag>CloudFront</tag>
       </tags>
   </entry>
   <entry>
@@ -1342,6 +1217,105 @@
       </tags>
   </entry>
   <entry>
+    <title>ECR - How to use</title>
+    <url>/2019/08/01/dev/devops/aws/computing/ecr/use/ecr-use/</url>
+    <content><![CDATA[<p>생성된 Docker Image를 ECR에 login / push / pull 하는 방법에 대한 설명입니다.</p>
+<hr>
+<h1 id="Login"><a href="#Login" class="headerlink" title="Login"></a>Login</h1><p>ECR에 Push를 하기 위해서는 먼저 해당 EC2에서 ECR에 접근이 가능해야합니다.</p>
+<ul>
+<li><a href="/2019/08/01/dev/infra/aws/security-credentials/iam/role/ecr/create/ecr-role-create/">Create Role - ECR</a></li>
+<li><a href="/2019/08/01/dev/infra/aws/security-credentials/iam/role/ecr/apply/ecr-role-apply/">Apply Role for ECR</a></li>
+</ul>
+<p>정상적으로 되지 않는 경우 위의 링크를 참조하여 먼저 진행이 필요합니다.</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[ec2-user ~]$ sudo $(aws ecr get-login --no-include-email --region ap-northeast-2)</span><br><span class="line">WARNING! Using --password via the CLI is insecure. Use --password-stdin.</span><br><span class="line">WARNING! Your password will be stored unencrypted in /root/.docker/config.json.</span><br><span class="line">Configure a credential helper to remove this warning. See</span><br><span class="line">https://docs.docker.com/engine/reference/commandline/login/#credentials-store</span><br><span class="line"> </span><br><span class="line">Login Succeeded</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="Push"><a href="#Push" class="headerlink" title="Push"></a>Push</h1><h2 id="Push-format"><a href="#Push-format" class="headerlink" title="Push format"></a>Push format</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Set image tag</span></span><br><span class="line">[ec2-user ~]$ sudo docker tag [namespace]/[repo-name]:[tag] [aws account].dkr.ecr.[region].amazonaws.com/[namespace]/[repo-name]:[tag]</span><br><span class="line"><span class="meta">#</span><span class="bash"> Push</span></span><br><span class="line">[ec2-user ~]$ sudo docker push [aws account].dkr.ecr.[region].amazonaws.com/[namespace]/[repo-name]:[tag]</span><br></pre></td></tr></table></figure>
+
+<h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Namespace : project</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Repo-Name : client</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Tag : latest</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Region : ap-northeast-2 (서울)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> AWS Account : 123456789012</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"> Set image tag</span></span><br><span class="line">[ec2-user ~]$ sudo docker tag project/client:latest 123456789012.dkr.ecr.ap-northeast-2.amazonaws.com/project/client:latest</span><br><span class="line"><span class="meta">#</span><span class="bash"> 이미지 태그 지정</span></span><br><span class="line">[ec2-user ~]$ sudo docker push 123456789012.dkr.ecr.ap-northeast-2.amazonaws.com/project/client:latest</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="Pull"><a href="#Pull" class="headerlink" title="Pull"></a>Pull</h1><h2 id="Pull-format"><a href="#Pull-format" class="headerlink" title="Pull format"></a>Pull format</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[ec2-user ~]$ sudo docker pull [aws account].dkr.ecr.[region].amazonaws.com/[namespace]/[repo-name]:[tag]</span><br></pre></td></tr></table></figure>
+
+<h2 id="Example-1"><a href="#Example-1" class="headerlink" title="Example"></a>Example</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Namespace : project</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Repo-Name : client</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Tag : latest</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Region : ap-northeast-2 (서울)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> AWS Account : 123456789012</span></span><br><span class="line"> </span><br><span class="line">[ec2-user ~]$ sudo docker pull 123456789012.dkr.ecr.ap-northeast-2.amazonaws.com/project/client:latest</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>DevOps</category>
+        <category>AWS</category>
+        <category>Computing</category>
+        <category>ECR</category>
+      </categories>
+      <tags>
+        <tag>AWS</tag>
+        <tag>Computing</tag>
+        <tag>ECR</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CloudFront - Configuration Domain</title>
+    <url>/2019/08/18/dev/devops/aws/network-contents/cloud-front/config/cloud-front-domain/</url>
+    <content><![CDATA[<p>기본적으로 설정되는 CloudFront Domain이 아닌 특정서비스의 sub domain으로 사용하기 위해서 이며,<br>추가적인 설정에 따라서 CORS 등등 을 하기 위해서도 필요합니다.<br>예를들어 <code>example.com</code>을 domain을 사용하는 서비스가 있을때 <code>cdn.example.com</code>으로 사용하는 것처럼 말이죠.</p>
+<hr>
+<h1 id="Route53-Record-Set"><a href="#Route53-Record-Set" class="headerlink" title="Route53 - Record Set"></a>Route53 - Record Set</h1><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/1.png" alt="1"></p>
+<ul>
+<li>생성하려는 Domain 연결을 위해 Route53에서 Record Set을 추가합니다<br>자세한 내용은 <a href="/2019/08/02/dev/infra/aws/network-contents/route53/record-set/route53-record-set/">Route53 - Record Set</a> 를 참조 하세요.</li>
+</ul>
+<hr>
+<h1 id="ACM-for-Lambda-Edge"><a href="#ACM-for-Lambda-Edge" class="headerlink" title="ACM for Lambda@Edge"></a>ACM for Lambda@Edge</h1><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/2.png" alt="2"></p>
+<ul>
+<li><code>Lambda@Edge</code>를 사용할 예정이 없다면 건너뛰어도 됩니다.</li>
+<li><code>CloudFront</code>에 domain 설정시 특정 domain의 sub domain으로 사용하기 위해 해당 domain의 ACM이 필요합니다.</li>
+<li><code>ACM</code>은 추후 <code>Lambda@Edge</code>를 사용하기 위해 <code>us-east-1</code>에 인증서를 생성하여 사용.<br>자세한 내용은 <a href="/2019/08/02/dev/infra/aws/security-credentials/acm/create/acm-create/">ACM - Create</a></li>
+</ul>
+<hr>
+<h1 id="CloudFront-Configuration-Domain"><a href="#CloudFront-Configuration-Domain" class="headerlink" title="CloudFront - Configuration Domain"></a>CloudFront - Configuration Domain</h1><h2 id="메뉴-이동"><a href="#메뉴-이동" class="headerlink" title="메뉴 이동"></a>메뉴 이동</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/3.png" alt="3"></p>
+<ul>
+<li>AWS 메인에서 <code>CloudFront</code>메뉴 이동.</li>
+</ul>
+<hr>
+<h2 id="CloundFront-Distribution"><a href="#CloundFront-Distribution" class="headerlink" title="CloundFront Distribution"></a>CloundFront Distribution</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/4.png" alt="4"></p>
+<ul>
+<li>Domain을 할당하려는 Distribution 상세로 이동.</li>
+</ul>
+<hr>
+<h2 id="General-Edit"><a href="#General-Edit" class="headerlink" title="General Edit"></a>General Edit</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/5.png" alt="5"></p>
+<ul>
+<li><code>General</code> Tab 클릭.</li>
+<li><code>Edit</code> 클릭.</li>
+</ul>
+<hr>
+<h2 id="Edit-Distribution"><a href="#Edit-Distribution" class="headerlink" title="Edit Distribution"></a>Edit Distribution</h2><h3 id="Distribution-Setting"><a href="#Distribution-Setting" class="headerlink" title="Distribution Setting"></a>Distribution Setting</h3><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/6.png" alt="6"></p>
+<ul>
+<li><code>Alternate Domain Names</code>에 사용하려는 Domain을 입력합니다.</li>
+<li><code>Custom SSL Certificate</code> 서비스하는 Domain의 sub domain으로 사용하려면 Custom SSL Certificate를 선택하세요.</li>
+<li>사용하려는 Domain의 SSL Certificate를 선택합니다.<br>주의할 점은 CloudFront는 region이 필요한 곳의 SSL Certificate를 사용하세요.<br>만약 <code>Lambda@Edge</code> 사용을 고려 중 이라면 반드시 상단의 <code>ACM for Lambda@Edge</code> 항목을 확인 후 적용 해야합니다. </li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/7.png" alt="7"></p>
+<ul>
+<li><code>Yes, Edit</code> 버튼을 클릭하여 저장합니다.</li>
+</ul>
+<hr>
+<h2 id="Check"><a href="#Check" class="headerlink" title="Check"></a>Check</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/config/domain/8.png" alt="8"></p>
+<ul>
+<li>정상적으로 <code>Alternate Domain Names</code>, <code>SSL Certificate</code> 적용되었는지 확인합니다.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>DevOps</category>
+        <category>AWS</category>
+        <category>Network And Contents</category>
+        <category>CloudFront</category>
+      </categories>
+      <tags>
+        <tag>AWS</tag>
+        <tag>Network And Contents</tag>
+        <tag>CloudFront</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>VPC - Create</title>
     <url>/2019/08/06/dev/devops/aws/network-contents/vpc/create/vpc-create/</url>
     <content><![CDATA[<p>Amazon Virtual Private Cloud(Amazon VPC)에서는 사용자가 정의한 가상 네트워크로 AWS 리소스를 시작할 수 있습니다.<br>이 가상 네트워크는 AWS의 확장 가능한 인프라를 사용한다는 이점과 함께 데이터 센터에서 운영하는 기존 네트워크와 매우 유사합니다.</p>
@@ -1389,39 +1363,109 @@
       </tags>
   </entry>
   <entry>
-    <title>ECR - How to use</title>
-    <url>/2019/08/01/dev/devops/aws/computing/ecr/use/ecr-use/</url>
-    <content><![CDATA[<p>생성된 Docker Image를 ECR에 login / push / pull 하는 방법에 대한 설명입니다.</p>
+    <title>CloudFront - Create</title>
+    <url>/2019/08/18/dev/devops/aws/network-contents/cloud-front/create/cloud-front-create/</url>
+    <content><![CDATA[<p><code>CloudFront</code>는 .html, .css, .js 및 이미지 파일과 같은 정적 및 동적 웹 콘텐츠를 사용자에게 더 빨리 배포하도록 지원하는 웹 서비스입니다.<br><code>CloudFront</code>는 엣지 로케이션이라고 하는 데이터 센터의 전 세계 네트워크를 통해 콘텐츠를 제공하며,<br>서비스하는 콘텐츠를 사용자가 요청하면 지연 시간이 가장 낮은 엣지 로케이션으로 라우팅되므로 콘텐츠 전송 성능이 뛰어납니다.<br>예를들어 특정 이미지가 캐싱되기전에 100ms가 소요되었다면 <code>CloudFront</code>에 캐싱된 경우 1x ms가 소요될 정도로 성능 개선이 되기 때문에<br>Global Service뿐만 아니라 다양하게 사용하게됩니다.</p>
 <hr>
-<h1 id="Login"><a href="#Login" class="headerlink" title="Login"></a>Login</h1><p>ECR에 Push를 하기 위해서는 먼저 해당 EC2에서 ECR에 접근이 가능해야합니다.</p>
+<h1 id="CloudFront-Create"><a href="#CloudFront-Create" class="headerlink" title="CloudFront - Create"></a>CloudFront - Create</h1><h2 id="메뉴-이동"><a href="#메뉴-이동" class="headerlink" title="메뉴 이동"></a>메뉴 이동</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/1.png" alt="1"></p>
 <ul>
-<li><a href="/2019/08/01/dev/infra/aws/security-credentials/iam/role/ecr/create/ecr-role-create/">Create Role - ECR</a></li>
-<li><a href="/2019/08/01/dev/infra/aws/security-credentials/iam/role/ecr/apply/ecr-role-apply/">Apply Role for ECR</a></li>
+<li>AWS 메인에서 <code>CloudFront</code>메뉴 이동.</li>
 </ul>
-<p>정상적으로 되지 않는 경우 위의 링크를 참조하여 먼저 진행이 필요합니다.</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[ec2-user ~]$ sudo $(aws ecr get-login --no-include-email --region ap-northeast-2)</span><br><span class="line">WARNING! Using --password via the CLI is insecure. Use --password-stdin.</span><br><span class="line">WARNING! Your password will be stored unencrypted in /root/.docker/config.json.</span><br><span class="line">Configure a credential helper to remove this warning. See</span><br><span class="line">https://docs.docker.com/engine/reference/commandline/login/#credentials-store</span><br><span class="line"> </span><br><span class="line">Login Succeeded</span><br></pre></td></tr></table></figure>
-
 <hr>
-<h1 id="Push"><a href="#Push" class="headerlink" title="Push"></a>Push</h1><h2 id="Push-format"><a href="#Push-format" class="headerlink" title="Push format"></a>Push format</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Set image tag</span></span><br><span class="line">[ec2-user ~]$ sudo docker tag [namespace]/[repo-name]:[tag] [aws account].dkr.ecr.[region].amazonaws.com/[namespace]/[repo-name]:[tag]</span><br><span class="line"><span class="meta">#</span><span class="bash"> Push</span></span><br><span class="line">[ec2-user ~]$ sudo docker push [aws account].dkr.ecr.[region].amazonaws.com/[namespace]/[repo-name]:[tag]</span><br></pre></td></tr></table></figure>
-
-<h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Namespace : project</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Repo-Name : client</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Tag : latest</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Region : ap-northeast-2 (서울)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> AWS Account : 123456789012</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"> Set image tag</span></span><br><span class="line">[ec2-user ~]$ sudo docker tag project/client:latest 123456789012.dkr.ecr.ap-northeast-2.amazonaws.com/project/client:latest</span><br><span class="line"><span class="meta">#</span><span class="bash"> 이미지 태그 지정</span></span><br><span class="line">[ec2-user ~]$ sudo docker push 123456789012.dkr.ecr.ap-northeast-2.amazonaws.com/project/client:latest</span><br></pre></td></tr></table></figure>
-
+<h2 id="CloundFront-Distribution"><a href="#CloundFront-Distribution" class="headerlink" title="CloundFront Distribution"></a>CloundFront Distribution</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/2.png" alt="2"></p>
+<ul>
+<li><code>Create Distribution</code>버튼 클릭.</li>
+<li>Create CloudFront라고 생각해도 무방.</li>
+</ul>
 <hr>
-<h1 id="Pull"><a href="#Pull" class="headerlink" title="Pull"></a>Pull</h1><h2 id="Pull-format"><a href="#Pull-format" class="headerlink" title="Pull format"></a>Pull format</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[ec2-user ~]$ sudo docker pull [aws account].dkr.ecr.[region].amazonaws.com/[namespace]/[repo-name]:[tag]</span><br></pre></td></tr></table></figure>
-
-<h2 id="Example-1"><a href="#Example-1" class="headerlink" title="Example"></a>Example</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Namespace : project</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Repo-Name : client</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Tag : latest</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Region : ap-northeast-2 (서울)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> AWS Account : 123456789012</span></span><br><span class="line"> </span><br><span class="line">[ec2-user ~]$ sudo docker pull 123456789012.dkr.ecr.ap-northeast-2.amazonaws.com/project/client:latest</span><br></pre></td></tr></table></figure>
+<h2 id="Select-a-delivery-method-for-your-content"><a href="#Select-a-delivery-method-for-your-content" class="headerlink" title="Select a delivery method for your content."></a>Select a delivery method for your content.</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/3.png" alt="3"></p>
+<ul>
+<li>WEB 카테고리의 <code>Get Started</code>버튼을 클릭.</li>
+<li>WEB은 주로 Static, 즉 정적인 파일들을 서비스 할때 좋습니다.</li>
+<li>RTMP는 주로 Media 파일들, 스트리밍을 하려고 할 때 사용하는게 좋습니다.</li>
+</ul>
+<hr>
+<h2 id="Create-Distribution"><a href="#Create-Distribution" class="headerlink" title="Create Distribution"></a>Create Distribution</h2><h3 id="Origin-Setting"><a href="#Origin-Setting" class="headerlink" title="Origin Setting"></a>Origin Setting</h3><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/4.png" alt="4"></p>
+<ul>
+<li><code>Origin Domain Name</code>은 해당 항목을 클릭하거나 입력하려 하면 기존에 생성되어있는 S3 Bucket을 선택 할 수 있습니다.</li>
+<li><code>Origin ID</code>는 위의 <code>Origin Domain Name</code>에서 S3를 선택하면 자동 입력됩니다.</li>
+<li><code>Restrict Bucket Access</code>는 <code>Yes</code> 선택하여 bucket access를 제한합니다.</li>
+<li><code>Origin Access Identity</code>는 <code>Create a New Identity</code>를 선택하여 접근 하기 위한 identity를 생성 합니다. (무조건 적인 옵션은 아닙니다)</li>
+<li><code>Comment</code>는 Default prefix <code>access-identity</code> 에 해당 bucket 이름을 붙입니다.</li>
+<li><code>Grant Read Permissions on Bucket</code>는 <code>Yes, Update Bucket Policy</code>를 선택합니다.<br>S3 Bucket Policy에 CloudFront 에서 필요한 정책을 추가 합니다<br><code>No, I Will Update Permissions</code> 선택시 custom manual 입니다.</li>
+</ul>
+<hr>
+<h3 id="Default-Cache-Behavior-Settings"><a href="#Default-Cache-Behavior-Settings" class="headerlink" title="Default Cache Behavior Settings"></a>Default Cache Behavior Settings</h3><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/5.png" alt="5"></p>
+<ul>
+<li><code>Compress Object Automatically</code>는 <code>Yes</code>를 선택합니다.<br>해당 옵션 선택시 파일을 압축하여 제공하며 다운로드 성능을 더 개선 시킬 수 있습니다.<br>요청시 <code>Accept-Encoding: gzip</code> 이 포함되어 있어야 합니다<br>자세한 내용은 <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/ServingCompressedFiles.html">Serving Compressed Files</a> 참조 하세요.</li>
+</ul>
+<hr>
+<h3 id="Distribution-Settings"><a href="#Distribution-Settings" class="headerlink" title="Distribution Settings"></a>Distribution Settings</h3><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/6.png" alt="6"></p>
+<ul>
+<li>Default 설정 그대로 두면 됩니다.</li>
+<li><code>Create Distribution</code> 버튼을 클릭하여 생성합니다.</li>
+</ul>
+<hr>
+<h2 id="Check-Created"><a href="#Check-Created" class="headerlink" title="Check Created"></a>Check Created</h2><p><img data-src="/image/dev/devops/aws/network-contents/cloud-front/create/7.png" alt="7"></p>
+<ul>
+<li>생성된 <code>Distribution</code>을 확인합니다.</li>
+</ul>
 ]]></content>
       <categories>
         <category>Dev</category>
         <category>DevOps</category>
         <category>AWS</category>
-        <category>Computing</category>
-        <category>ECR</category>
+        <category>Network And Contents</category>
+        <category>CloudFront</category>
       </categories>
       <tags>
         <tag>AWS</tag>
-        <tag>Computing</tag>
-        <tag>ECR</tag>
+        <tag>Network And Contents</tag>
+        <tag>CloudFront</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Route53 - Create</title>
+    <url>/2019/08/02/dev/devops/aws/network-contents/route53/create/route53-create/</url>
+    <content><![CDATA[<p>가용성과 확장성이 우수한 DNS(도메인 이름 시스템) 웹 서비스입니다.<br>Route 53을 사용하여 세 가지 주요 기능, 즉 도메인 등록, DNS 라우팅, 상태 확인을 조합하여 실행할 수 있습니다</p>
+<hr>
+<h1 id="Route53-Create"><a href="#Route53-Create" class="headerlink" title="Route53 - Create"></a>Route53 - Create</h1><p><img data-src="/image/dev/devops/aws/network-contents/route53/create/1.png" alt="1"></p>
+<ul>
+<li>Route 53 메뉴 이동</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/route53/create/2.png" alt="2"></p>
+<ul>
+<li>Hosted Zone으로 이동</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/route53/create/3.png" alt="3"></p>
+<ul>
+<li>Create Hosted Zone 클릭.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/route53/create/4.png" alt="4"></p>
+<ul>
+<li>Domain Name 입력</li>
+<li>Comment(Optional) 입력</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/route53/create/5.png" alt="5"></p>
+<ul>
+<li>생성 확인</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>DevOps</category>
+        <category>AWS</category>
+        <category>Network And Contents</category>
+        <category>Route53</category>
+      </categories>
+      <tags>
+        <tag>AWS</tag>
+        <tag>Network And Contents</tag>
+        <tag>Route53</tag>
       </tags>
   </entry>
   <entry>
@@ -1472,50 +1516,6 @@
 <p><img data-src="/image/dev/devops/aws/network-contents/route53/record-set/7.png" alt="7"></p>
 <ul>
 <li><code>api.example.com</code> alias 생성 확인.</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>DevOps</category>
-        <category>AWS</category>
-        <category>Network And Contents</category>
-        <category>Route53</category>
-      </categories>
-      <tags>
-        <tag>AWS</tag>
-        <tag>Network And Contents</tag>
-        <tag>Route53</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Route53 - Create</title>
-    <url>/2019/08/02/dev/devops/aws/network-contents/route53/create/route53-create/</url>
-    <content><![CDATA[<p>가용성과 확장성이 우수한 DNS(도메인 이름 시스템) 웹 서비스입니다.<br>Route 53을 사용하여 세 가지 주요 기능, 즉 도메인 등록, DNS 라우팅, 상태 확인을 조합하여 실행할 수 있습니다</p>
-<hr>
-<h1 id="Route53-Create"><a href="#Route53-Create" class="headerlink" title="Route53 - Create"></a>Route53 - Create</h1><p><img data-src="/image/dev/devops/aws/network-contents/route53/create/1.png" alt="1"></p>
-<ul>
-<li>Route 53 메뉴 이동</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/route53/create/2.png" alt="2"></p>
-<ul>
-<li>Hosted Zone으로 이동</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/route53/create/3.png" alt="3"></p>
-<ul>
-<li>Create Hosted Zone 클릭.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/route53/create/4.png" alt="4"></p>
-<ul>
-<li>Domain Name 입력</li>
-<li>Comment(Optional) 입력</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/route53/create/5.png" alt="5"></p>
-<ul>
-<li>생성 확인</li>
 </ul>
 ]]></content>
       <categories>
@@ -1715,156 +1715,6 @@
       </tags>
   </entry>
   <entry>
-    <title>RDS Parameter Group - Apply</title>
-    <url>/2019/08/05/dev/devops/aws/database/rds/parameter-group/apply/rds-parameter-group-apply/</url>
-    <content><![CDATA[<p>생성한 RDS Parameter Group을 적용하는 방법 입니다.</p>
-<hr>
-<h1 id="RDS-Parameter-Group-Apply"><a href="#RDS-Parameter-Group-Apply" class="headerlink" title="RDS Parameter Group - Apply"></a>RDS Parameter Group - Apply</h1><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/1.png" alt="1"></p>
-<ul>
-<li>적용이 필요한 RDS 선택</li>
-<li>수정 버튼 클릭</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/2.png" alt="2"></p>
-<ul>
-<li>데이터 베이스 옵션</li>
-<li>생성한 파라미터 그룹 선택.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/3.png" alt="3"></p>
-<ul>
-<li>계속 버튼 클릭</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/4.png" alt="4"></p>
-<ul>
-<li>적용 파라미터 그룹 확인.</li>
-<li>DB 인스턴스 수정</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/5.png" alt="5"></p>
-<ul>
-<li>RDS 수정 중 상태 확인.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/6.png" alt="6"></p>
-<ul>
-<li>RDS 사용 가능 상태 확인.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/7.png" alt="7"></p>
-<ul>
-<li>적용된 파라미터 그룹 확인.</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>DevOps</category>
-        <category>AWS</category>
-        <category>Database</category>
-        <category>RDS</category>
-        <category>Parameter Group</category>
-      </categories>
-      <tags>
-        <tag>Database</tag>
-        <tag>AWS</tag>
-        <tag>RDS</tag>
-        <tag>Parameter Group</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>RDS Parameter Group - Create</title>
-    <url>/2019/08/05/dev/devops/aws/database/rds/parameter-group/create/rds-parameter-group-create/</url>
-    <content><![CDATA[<p>DB 인스턴스 를 파라미터 그룹과 연결하여 DB 엔진 구성을 관리합니다.<br>Amazon RDS는 새로 생성된 DB 인스턴스 에 적용되는 기본 설정으로 파라미터 그룹을 정의합니다.<br>맞춤형 설정으로 자신만의 파라미터 그룹을 정의할 수 있습니다.<br>그런 다음 DB 인스턴스를 수정해 이 파라미터 그룹을 사용하게 할 수 있습니다.</p>
-<hr>
-<h1 id="RDS-Parameter-Group-Create"><a href="#RDS-Parameter-Group-Create" class="headerlink" title="RDS Parameter Group - Create"></a>RDS Parameter Group - Create</h1><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/create/1.png" alt="1"></p>
-<ul>
-<li>RDS 메뉴 이동</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/create/2.png" alt="2"></p>
-<ul>
-<li>파라미터 그룹 메뉴 이동</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/create/3.png" alt="3"></p>
-<ul>
-<li>파리미터 그룹 생성 클릭.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/create/4.png" alt="4"></p>
-<ul>
-<li>파라미터 그룹 세부 정보<ul>
-<li>파라미터 그룹 패밀리 : DB 패밀리 선택</li>
-<li>그룹 이름 : 이름 입력</li>
-<li>설명 : 설명 입력</li>
-</ul>
-</li>
-<li>생성 클릭</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>DevOps</category>
-        <category>AWS</category>
-        <category>Database</category>
-        <category>RDS</category>
-        <category>Parameter Group</category>
-      </categories>
-      <tags>
-        <tag>Database</tag>
-        <tag>AWS</tag>
-        <tag>RDS</tag>
-        <tag>Parameter Group</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>RDS Parameter Group - Apply Fix</title>
-    <url>/2019/08/05/dev/devops/aws/database/rds/parameter-group/apply-fix/rds-parameter-group-apply-fix/</url>
-    <content><![CDATA[<p>RDS Parameter Group을 적용하면 비정상적으로 보류 상태가 발견될때가 있습니다.<br>이런 경우를 해결하는 방법은… 단순한 재부팅 이며 다음과 같습니다.</p>
-<hr>
-<h1 id="RDS-Parameter-Group-Apply-Fix"><a href="#RDS-Parameter-Group-Apply-Fix" class="headerlink" title="RDS Parameter Group - Apply Fix"></a>RDS Parameter Group - Apply Fix</h1><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply-fix/1.png" alt="1"></p>
-<ul>
-<li>RDS Parameter Group을 적용하였으나 비정상적으로 <code>재시작 보류</code> 상태가 발견.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply-fix/2.png" alt="2"></p>
-<ul>
-<li><code>재시작 보류</code> 상태인 RDS를 선택</li>
-<li>인스턴스 작업의 재부팅 클릭</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply-fix/3.png" alt="3"></p>
-<ul>
-<li>재부팅 클</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply-fix/4.png" alt="4"></p>
-<ul>
-<li>재부팅 상태 확인.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply-fix/5.png" alt="5"></p>
-<ul>
-<li>재부팅 완료 후 정상적으로 동기화된 상태 확인.</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>DevOps</category>
-        <category>AWS</category>
-        <category>Database</category>
-        <category>RDS</category>
-        <category>Parameter Group</category>
-      </categories>
-      <tags>
-        <tag>Database</tag>
-        <tag>AWS</tag>
-        <tag>RDS</tag>
-        <tag>Parameter Group</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Elastic IP - Assign</title>
     <url>/2019/08/03/dev/devops/aws/computing/ec2/elastic-ip/assign/elastic-ip-assign/</url>
     <content><![CDATA[<p>생성한 Elastic IP를 EC2 instance와 연동하는 방법에 대한 가이드 입니다.</p>
@@ -1908,79 +1758,6 @@
       </tags>
   </entry>
   <entry>
-    <title>RDS Parameter Group - MariaDB 10.3</title>
-    <url>/2019/08/05/dev/devops/aws/database/rds/parameter-group/engine/rds-parameter-group-mariadb-10-3/</url>
-    <content><![CDATA[<p>RDS MariaDB 10.3 사용시 설정한 Parameter Option 정보입니다.<br>그대로 보다는 필요한 옵션만 참고해서 사용 해주세요.</p>
-<hr>
-<h1 id="RDS-Parameter-Group-MariaDB-10-3"><a href="#RDS-Parameter-Group-MariaDB-10-3" class="headerlink" title="RDS Parameter Group - MariaDB 10.3"></a>RDS Parameter Group - MariaDB 10.3</h1><h2 id="편집"><a href="#편집" class="headerlink" title="편집"></a>편집</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/1.png" alt="1"></p>
-<ul>
-<li>MariaDB 10.3 Parameter Group 선택</li>
-<li>편집</li>
-</ul>
-<hr>
-<h2 id="상세"><a href="#상세" class="headerlink" title="상세"></a>상세</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/2.png" alt="2"></p>
-<ul>
-<li>파라미터 편집</li>
-</ul>
-<hr>
-<h2 id="character-set-server-설정"><a href="#character-set-server-설정" class="headerlink" title="character_set_server 설정."></a>character_set_server 설정.</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/3.png" alt="3"></p>
-<ul>
-<li><code>character_set_server</code> 검색.</li>
-<li><code>utf8mb4</code> 선택.</li>
-<li>변경 사항 저장 클릭.</li>
-</ul>
-<hr>
-<h2 id="character-set-client-설정"><a href="#character-set-client-설정" class="headerlink" title="character_set_client 설정"></a>character_set_client 설정</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/4.png" alt="4"></p>
-<ul>
-<li><code>character_set_client</code> 검색.</li>
-<li><code>utf8mb4</code> 선택.</li>
-<li>변경 사항 저장 클릭. </li>
-</ul>
-<hr>
-<h2 id="collation-server-설정"><a href="#collation-server-설정" class="headerlink" title="collation_server 설정"></a>collation_server 설정</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/5.png" alt="5"></p>
-<ul>
-<li><code>collation_server</code> 검색.</li>
-<li><code>utf8mb4_unicode_ci</code> 선택.</li>
-<li>변경 사항 저장 클릭.</li>
-</ul>
-<hr>
-<h2 id="lower-case-table-name-설정-Table-name-대소문자-구분-하지-않기-위해"><a href="#lower-case-table-name-설정-Table-name-대소문자-구분-하지-않기-위해" class="headerlink" title="lower_case_table_name 설정 (Table name 대소문자 구분 하지 않기 위해)"></a>lower_case_table_name 설정 (Table name 대소문자 구분 하지 않기 위해)</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/6.png" alt="6"></p>
-<ul>
-<li><code>lower_case_table_name</code> 검색.</li>
-<li><code>1</code> 선택.</li>
-<li>변경 사항 저장 클릭.</li>
-</ul>
-<hr>
-<h2 id="skip-name-resolve-DNS-Lookup-과정-생략"><a href="#skip-name-resolve-DNS-Lookup-과정-생략" class="headerlink" title="skip_name_resolve (DNS Lookup 과정 생략)"></a>skip_name_resolve (DNS Lookup 과정 생략)</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/7.png" alt="7"></p>
-<ul>
-<li><code>skip_name_resolve</code> 검색.</li>
-<li><code>1</code> 선택.</li>
-<li>변경 사항 저장 클릭.</li>
-</ul>
-<hr>
-<h2 id="log-bin-trust-function-creators-Trigger-생성시-might-error을-없애기-위한"><a href="#log-bin-trust-function-creators-Trigger-생성시-might-error을-없애기-위한" class="headerlink" title="log_bin_trust_function_creators (Trigger 생성시 might error을 없애기 위한)"></a>log_bin_trust_function_creators (Trigger 생성시 might error을 없애기 위한)</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/8.png" alt="8"></p>
-<ul>
-<li><code>log_bin_trust_function_creators</code> 검색</li>
-<li><code>1</code> 선택</li>
-<li>변경 사항 저장 클릭.</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>DevOps</category>
-        <category>AWS</category>
-        <category>Database</category>
-        <category>RDS</category>
-        <category>Parameter Group</category>
-      </categories>
-      <tags>
-        <tag>Database</tag>
-        <tag>AWS</tag>
-        <tag>RDS</tag>
-        <tag>Parameter Group</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Elastic IP - Create</title>
     <url>/2019/08/03/dev/devops/aws/computing/ec2/elastic-ip/create/elastic-ip-create/</url>
     <content><![CDATA[<p>Elastic IP는 static ip를 제공합니다.<br>EC2는 restart 하거나 Scale Up을 하기 위해 AMI를 생성 후 instance 유형을 바꿔서 새로 생성하는 경우<br>결과적으로는 새로운 EC2 instance가 생성하는 것이기 때문에 IP가 변경됩니다.<br>이럴때 단순히 Scale Up이기 때문에 기존에 IP를 유지해야 하는 경우가 있다면<br>Elastic IP를 사용하면 도움이 됩니다.<br>그리고 network interface 연결도 가능합니다.</p>
@@ -2014,135 +1791,6 @@
         <tag>EC2</tag>
         <tag>Computing</tag>
         <tag>Elastic IP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ELB - Http redirect Https</title>
-    <url>/2019/08/04/dev/devops/aws/computing/ec2/elb/http-redirect-https/elb-http-redirect-https/</url>
-    <content><![CDATA[<p>ELB에 <code>http</code> 요청이 들어올때 <code>https</code>로 redirect하는 설정입니다.</p>
-<hr>
-<h1 id="ELB-Create"><a href="#ELB-Create" class="headerlink" title="ELB - Create"></a>ELB - Create</h1><h2 id="편집하기"><a href="#편집하기" class="headerlink" title="편집하기"></a>편집하기</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/http-redirect-https/1.png" alt="1"></p>
-<ul>
-<li>해당 설정을 하려는 ELB 선택</li>
-<li><code>HTTP:80</code> 리스너 선택</li>
-<li><code>편집</code>클릭</li>
-</ul>
-<hr>
-<h2 id="기본-작업-제거"><a href="#기본-작업-제거" class="headerlink" title="기본 작업 제거"></a>기본 작업 제거</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/http-redirect-https/2.png" alt="2"></p>
-<ul>
-<li>기본으로 생성되어 있는 작업을 제거합니다.</li>
-</ul>
-<hr>
-<h2 id="작업-추가"><a href="#작업-추가" class="headerlink" title="작업 추가"></a>작업 추가</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/http-redirect-https/3.png" alt="3"></p>
-<ul>
-<li><code>작업추가</code>를 클릭.</li>
-<li><code>리디렉션 대상...</code> 선</li>
-</ul>
-<hr>
-<h2 id="Redirect-target-설정"><a href="#Redirect-target-설정" class="headerlink" title="Redirect target 설정"></a>Redirect target 설정</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/http-redirect-https/4.png" alt="4"></p>
-<ul>
-<li>설정<ul>
-<li>Protocol은 <code>HTTPS</code>, port는 <code>443</code></li>
-<li>기본 호스트 쿼리 경로 사용.</li>
-<li>301 - 영구 이동됨.</li>
-</ul>
-</li>
-<li><code>업데이트</code></li>
-</ul>
-<hr>
-<h2 id="수정-확인"><a href="#수정-확인" class="headerlink" title="수정 확인."></a>수정 확인.</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/http-redirect-https/5.png" alt="5"></p>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>DevOps</category>
-        <category>AWS</category>
-        <category>Computing</category>
-        <category>EC2</category>
-        <category>ELB</category>
-      </categories>
-      <tags>
-        <tag>AWS</tag>
-        <tag>EC2</tag>
-        <tag>ELB</tag>
-        <tag>Computing</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ELB - Create</title>
-    <url>/2019/08/04/dev/devops/aws/computing/ec2/elb/create/elb-create/</url>
-    <content><![CDATA[<p>Elastic Load Balancing의 약자로 시스템에 가해지는 부하를 여러대의 시스템으로 분산해서<br>규모있는 시스템을 만들 수 있도록 해주는 단일 진입점 입니다.<br>ELB를 만들어 봅시다.</p>
-<hr>
-<h1 id="ELB-Create"><a href="#ELB-Create" class="headerlink" title="ELB - Create"></a>ELB - Create</h1><h2 id="EC2-메뉴로-이동"><a href="#EC2-메뉴로-이동" class="headerlink" title="EC2 메뉴로 이동."></a>EC2 메뉴로 이동.</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/1.png" alt="1"></p>
-<hr>
-<h2 id="로드밸런서-메뉴로-이동"><a href="#로드밸런서-메뉴로-이동" class="headerlink" title="로드밸런서 메뉴로 이동"></a>로드밸런서 메뉴로 이동</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/2.png" alt="2"></p>
-<hr>
-<h2 id="로드-밸런서-생성"><a href="#로드-밸런서-생성" class="headerlink" title="로드 밸런서 생성"></a>로드 밸런서 생성</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/3.png" alt="3"></p>
-<hr>
-<h2 id="로드-밸런서-유형-선택"><a href="#로드-밸런서-유형-선택" class="headerlink" title="로드 밸런서 유형 선택"></a>로드 밸런서 유형 선택</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/4.png" alt="4"></p>
-<ul>
-<li>Application Load Balancer 선택</li>
-</ul>
-<hr>
-<h2 id="로드-밸런서-구성"><a href="#로드-밸런서-구성" class="headerlink" title="로드 밸런서 구성"></a>로드 밸런서 구성</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/5.png" alt="5"></p>
-<ul>
-<li>기본 구성 : 로드 밸런서 이름</li>
-<li>리스너 : http, https 를 사용하기 위한 구성</li>
-<li>가용영역</li>
-<li>해당 VPC 선택</li>
-<li>가용 영역 : 영역 및 public Subnet 선택</li>
-</ul>
-<hr>
-<h2 id="보안-설정-구성"><a href="#보안-설정-구성" class="headerlink" title="보안 설정 구성"></a>보안 설정 구성</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/6.png" alt="6"></p>
-<ul>
-<li>인증서 유형 : <code>ACM</code>에서 인증서 선택</li>
-<li>인증서 이름 : <code>Certificated Manager</code>에서 생성한 인증서 선택</li>
-</ul>
-<hr>
-<h2 id="보안-그룹-구성"><a href="#보안-그룹-구성" class="headerlink" title="보안 그룹 구성"></a>보안 그룹 구성</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/7.png" alt="7"></p>
-<ul>
-<li>보안 그룹 할당 : <code>새 보안 그룹 생성</code></li>
-<li>보안 그룹 이름 : 이름 할당</li>
-<li>프로토콜<ul>
-<li>HTTP 전용 80 추가</li>
-<li>HTTPS 전용 443 추가</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="라우팅-구성"><a href="#라우팅-구성" class="headerlink" title="라우팅 구성"></a>라우팅 구성</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/8.png" alt="8"></p>
-<ul>
-<li>대상 그룹 : <code>새 대상 그룹</code> (미리 생성해둔 대상 그룹이 있는 경우 <code>기존 보안 그룹 선택</code>)</li>
-<li>이름 : 이름 할당</li>
-</ul>
-<hr>
-<h2 id="대상-등록"><a href="#대상-등록" class="headerlink" title="대상 등록"></a>대상 등록</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/9.png" alt="9"></p>
-<ul>
-<li>인스턴스 항목에서 <code>Instance</code>를 선택하여 등록된 항목에 추가</li>
-</ul>
-<hr>
-<h2 id="검토"><a href="#검토" class="headerlink" title="검토"></a>검토</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/10.png" alt="10"></p>
-<ul>
-<li>생성한 값으로 되어있는지 확인.</li>
-<li><code>생성</code> 클릭.</li>
-</ul>
-<hr>
-<h2 id="로드-밸런서-생성-상태"><a href="#로드-밸런서-생성-상태" class="headerlink" title="로드 밸런서 생성 상태"></a>로드 밸런서 생성 상태</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/11.png" alt="11"></p>
-<hr>
-<h2 id="생성-결과-확인"><a href="#생성-결과-확인" class="headerlink" title="생성 결과 확인"></a>생성 결과 확인</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/12.png" alt="12"></p>
-]]></content>
-      <categories>
-        <category>Dev</category>
-        <category>DevOps</category>
-        <category>AWS</category>
-        <category>Computing</category>
-        <category>EC2</category>
-        <category>ELB</category>
-      </categories>
-      <tags>
-        <tag>AWS</tag>
-        <tag>EC2</tag>
-        <tag>ELB</tag>
-        <tag>Computing</tag>
       </tags>
   </entry>
   <entry>
@@ -2276,90 +1924,355 @@
       </tags>
   </entry>
   <entry>
-    <title>Internet Gateway - Create</title>
-    <url>/2019/08/06/dev/devops/aws/network-contents/vpc/internet-gateway/create/internet-gateway-create/</url>
-    <content><![CDATA[<p>Internet Gateway는 수평 확장되고 가용성이 높은 중복 VPC 구성 요소 입니다<br>VPC의 인스턴스와 인터넷 간에 통신할 수 있게 해줌과 동시에 네트워크 트래픽에 가용성 위험이나 대역폭 제약 조건이 발생하지 않고.<br>IPv4 및 IPv6 트래픽을 지원합니다.<br>그리고 인터넷 라우팅 가능 트래픽에 대한 VPC 라우팅 테이블에 대상을 제공하고,<br>퍼블릭 IPv4 주소가 할당된 인스턴스에 대해 NAT(네트워크 주소 변환)를 수행하는 두 가지 목적이 있습니다.</p>
+    <title>RDS Parameter Group - Create</title>
+    <url>/2019/08/05/dev/devops/aws/database/rds/parameter-group/create/rds-parameter-group-create/</url>
+    <content><![CDATA[<p>DB 인스턴스 를 파라미터 그룹과 연결하여 DB 엔진 구성을 관리합니다.<br>Amazon RDS는 새로 생성된 DB 인스턴스 에 적용되는 기본 설정으로 파라미터 그룹을 정의합니다.<br>맞춤형 설정으로 자신만의 파라미터 그룹을 정의할 수 있습니다.<br>그런 다음 DB 인스턴스를 수정해 이 파라미터 그룹을 사용하게 할 수 있습니다.</p>
 <hr>
-<h1 id="Routing-Table-Create"><a href="#Routing-Table-Create" class="headerlink" title="Routing Table - Create"></a>Routing Table - Create</h1><p><img data-src="/image/dev/devops/aws/network-contents/vpc/internet-gateway/create/1.png" alt="1"></p>
+<h1 id="RDS-Parameter-Group-Create"><a href="#RDS-Parameter-Group-Create" class="headerlink" title="RDS Parameter Group - Create"></a>RDS Parameter Group - Create</h1><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/create/1.png" alt="1"></p>
 <ul>
-<li><code>VPC</code> 메뉴 이동.</li>
+<li>RDS 메뉴 이동</li>
 </ul>
 <hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/vpc/internet-gateway/create/2.png" alt="2"></p>
+<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/create/2.png" alt="2"></p>
 <ul>
-<li><code>인터넷 게이트웨이</code> 메뉴 이동.</li>
-<li><code>인터넷 게이트웨이 생성</code> 클릭.</li>
+<li>파라미터 그룹 메뉴 이동</li>
 </ul>
 <hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/vpc/internet-gateway/create/3.png" alt="3"></p>
+<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/create/3.png" alt="3"></p>
 <ul>
-<li>Name 태그 : 인터넷 게이트웨이 이름.</li>
-<li><code>생성</code> 클릭.</li>
+<li>파리미터 그룹 생성 클릭.</li>
 </ul>
 <hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/vpc/internet-gateway/create/4.png" alt="4"></p>
+<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/create/4.png" alt="4"></p>
 <ul>
-<li><code>인터넷 게이트웨이</code> 생성 요청 확인.</li>
-<li><code>닫기</code> 클릭.</li>
+<li>파라미터 그룹 세부 정보<ul>
+<li>파라미터 그룹 패밀리 : DB 패밀리 선택</li>
+<li>그룹 이름 : 이름 입력</li>
+<li>설명 : 설명 입력</li>
+</ul>
+</li>
+<li>생성 클릭</li>
 </ul>
 ]]></content>
       <categories>
         <category>Dev</category>
         <category>DevOps</category>
         <category>AWS</category>
-        <category>Network And Contents</category>
-        <category>VPC</category>
-        <category>Internet Gateway</category>
+        <category>Database</category>
+        <category>RDS</category>
+        <category>Parameter Group</category>
       </categories>
       <tags>
+        <tag>Database</tag>
         <tag>AWS</tag>
-        <tag>Network And Contents</tag>
-        <tag>VPC</tag>
-        <tag>Internet Gateway</tag>
+        <tag>RDS</tag>
+        <tag>Parameter Group</tag>
       </tags>
   </entry>
   <entry>
-    <title>Routing Table - Relation Private Subnet</title>
-    <url>/2019/08/12/dev/devops/aws/network-contents/vpc/routing-table/relation/routing-table-relation-private-subnet/</url>
-    <content><![CDATA[<p>Private Subnet을 위한 Routing Table Relation 내용입니다.<br>Private Subnet 생성은 다음 Post를 확인하여 미리 생성을 해야 합니다.<br><a href="/2019/08/11/dev/infra/aws/network-contents/vpc/subnet/create/private-subnet-create/">Private Subnet - Create</a></p>
+    <title>RDS Parameter Group - Apply Fix</title>
+    <url>/2019/08/05/dev/devops/aws/database/rds/parameter-group/apply-fix/rds-parameter-group-apply-fix/</url>
+    <content><![CDATA[<p>RDS Parameter Group을 적용하면 비정상적으로 보류 상태가 발견될때가 있습니다.<br>이런 경우를 해결하는 방법은… 단순한 재부팅 이며 다음과 같습니다.</p>
 <hr>
-<h1 id="Routing-Table-Relation-Private-Subnet"><a href="#Routing-Table-Relation-Private-Subnet" class="headerlink" title="Routing Table - Relation Private Subnet"></a>Routing Table - Relation Private Subnet</h1><p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/private-subnet/1.png" alt="1"></p>
+<h1 id="RDS-Parameter-Group-Apply-Fix"><a href="#RDS-Parameter-Group-Apply-Fix" class="headerlink" title="RDS Parameter Group - Apply Fix"></a>RDS Parameter Group - Apply Fix</h1><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply-fix/1.png" alt="1"></p>
 <ul>
-<li><code>VPC</code> 메뉴 이동.</li>
+<li>RDS Parameter Group을 적용하였으나 비정상적으로 <code>재시작 보류</code> 상태가 발견.</li>
 </ul>
 <hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/private-subnet/2.png" alt="2"></p>
+<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply-fix/2.png" alt="2"></p>
 <ul>
-<li><code>라우팅 테이블</code> 메뉴 이동.</li>
-<li><code>private routing table</code> 선택.</li>
-<li><code>서브넷 연결</code>탭으로 이동.</li>
-<li><code>편집</code>버튼 클릭.</li>
+<li><code>재시작 보류</code> 상태인 RDS를 선택</li>
+<li>인스턴스 작업의 재부팅 클릭</li>
 </ul>
 <hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/private-subnet/3.png" alt="3"></p>
+<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply-fix/3.png" alt="3"></p>
 <ul>
-<li>할당 하려는 <code>private subnet</code>을 <code>check</code>.</li>
-<li><code>저장</code> 버튼 클릭.</li>
+<li>재부팅 클</li>
 </ul>
 <hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/private-subnet/4.png" alt="4"></p>
+<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply-fix/4.png" alt="4"></p>
 <ul>
-<li>서브넷 <code>저장 성공</code> 확인.</li>
+<li>재부팅 상태 확인.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply-fix/5.png" alt="5"></p>
+<ul>
+<li>재부팅 완료 후 정상적으로 동기화된 상태 확인.</li>
 </ul>
 ]]></content>
       <categories>
         <category>Dev</category>
         <category>DevOps</category>
         <category>AWS</category>
-        <category>Network And Contents</category>
-        <category>VPC</category>
-        <category>Routing Table</category>
+        <category>Database</category>
+        <category>RDS</category>
+        <category>Parameter Group</category>
+      </categories>
+      <tags>
+        <tag>Database</tag>
+        <tag>AWS</tag>
+        <tag>RDS</tag>
+        <tag>Parameter Group</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RDS Parameter Group - Apply</title>
+    <url>/2019/08/05/dev/devops/aws/database/rds/parameter-group/apply/rds-parameter-group-apply/</url>
+    <content><![CDATA[<p>생성한 RDS Parameter Group을 적용하는 방법 입니다.</p>
+<hr>
+<h1 id="RDS-Parameter-Group-Apply"><a href="#RDS-Parameter-Group-Apply" class="headerlink" title="RDS Parameter Group - Apply"></a>RDS Parameter Group - Apply</h1><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/1.png" alt="1"></p>
+<ul>
+<li>적용이 필요한 RDS 선택</li>
+<li>수정 버튼 클릭</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/2.png" alt="2"></p>
+<ul>
+<li>데이터 베이스 옵션</li>
+<li>생성한 파라미터 그룹 선택.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/3.png" alt="3"></p>
+<ul>
+<li>계속 버튼 클릭</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/4.png" alt="4"></p>
+<ul>
+<li>적용 파라미터 그룹 확인.</li>
+<li>DB 인스턴스 수정</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/5.png" alt="5"></p>
+<ul>
+<li>RDS 수정 중 상태 확인.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/6.png" alt="6"></p>
+<ul>
+<li>RDS 사용 가능 상태 확인.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/apply/7.png" alt="7"></p>
+<ul>
+<li>적용된 파라미터 그룹 확인.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>DevOps</category>
+        <category>AWS</category>
+        <category>Database</category>
+        <category>RDS</category>
+        <category>Parameter Group</category>
+      </categories>
+      <tags>
+        <tag>Database</tag>
+        <tag>AWS</tag>
+        <tag>RDS</tag>
+        <tag>Parameter Group</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RDS Parameter Group - MariaDB 10.3</title>
+    <url>/2019/08/05/dev/devops/aws/database/rds/parameter-group/engine/rds-parameter-group-mariadb-10-3/</url>
+    <content><![CDATA[<p>RDS MariaDB 10.3 사용시 설정한 Parameter Option 정보입니다.<br>그대로 보다는 필요한 옵션만 참고해서 사용 해주세요.</p>
+<hr>
+<h1 id="RDS-Parameter-Group-MariaDB-10-3"><a href="#RDS-Parameter-Group-MariaDB-10-3" class="headerlink" title="RDS Parameter Group - MariaDB 10.3"></a>RDS Parameter Group - MariaDB 10.3</h1><h2 id="편집"><a href="#편집" class="headerlink" title="편집"></a>편집</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/1.png" alt="1"></p>
+<ul>
+<li>MariaDB 10.3 Parameter Group 선택</li>
+<li>편집</li>
+</ul>
+<hr>
+<h2 id="상세"><a href="#상세" class="headerlink" title="상세"></a>상세</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/2.png" alt="2"></p>
+<ul>
+<li>파라미터 편집</li>
+</ul>
+<hr>
+<h2 id="character-set-server-설정"><a href="#character-set-server-설정" class="headerlink" title="character_set_server 설정."></a>character_set_server 설정.</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/3.png" alt="3"></p>
+<ul>
+<li><code>character_set_server</code> 검색.</li>
+<li><code>utf8mb4</code> 선택.</li>
+<li>변경 사항 저장 클릭.</li>
+</ul>
+<hr>
+<h2 id="character-set-client-설정"><a href="#character-set-client-설정" class="headerlink" title="character_set_client 설정"></a>character_set_client 설정</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/4.png" alt="4"></p>
+<ul>
+<li><code>character_set_client</code> 검색.</li>
+<li><code>utf8mb4</code> 선택.</li>
+<li>변경 사항 저장 클릭. </li>
+</ul>
+<hr>
+<h2 id="collation-server-설정"><a href="#collation-server-설정" class="headerlink" title="collation_server 설정"></a>collation_server 설정</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/5.png" alt="5"></p>
+<ul>
+<li><code>collation_server</code> 검색.</li>
+<li><code>utf8mb4_unicode_ci</code> 선택.</li>
+<li>변경 사항 저장 클릭.</li>
+</ul>
+<hr>
+<h2 id="lower-case-table-name-설정-Table-name-대소문자-구분-하지-않기-위해"><a href="#lower-case-table-name-설정-Table-name-대소문자-구분-하지-않기-위해" class="headerlink" title="lower_case_table_name 설정 (Table name 대소문자 구분 하지 않기 위해)"></a>lower_case_table_name 설정 (Table name 대소문자 구분 하지 않기 위해)</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/6.png" alt="6"></p>
+<ul>
+<li><code>lower_case_table_name</code> 검색.</li>
+<li><code>1</code> 선택.</li>
+<li>변경 사항 저장 클릭.</li>
+</ul>
+<hr>
+<h2 id="skip-name-resolve-DNS-Lookup-과정-생략"><a href="#skip-name-resolve-DNS-Lookup-과정-생략" class="headerlink" title="skip_name_resolve (DNS Lookup 과정 생략)"></a>skip_name_resolve (DNS Lookup 과정 생략)</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/7.png" alt="7"></p>
+<ul>
+<li><code>skip_name_resolve</code> 검색.</li>
+<li><code>1</code> 선택.</li>
+<li>변경 사항 저장 클릭.</li>
+</ul>
+<hr>
+<h2 id="log-bin-trust-function-creators-Trigger-생성시-might-error을-없애기-위한"><a href="#log-bin-trust-function-creators-Trigger-생성시-might-error을-없애기-위한" class="headerlink" title="log_bin_trust_function_creators (Trigger 생성시 might error을 없애기 위한)"></a>log_bin_trust_function_creators (Trigger 생성시 might error을 없애기 위한)</h2><p><img data-src="/image/dev/devops/aws/database/rds/parameter-group/engine/mariadb-10-3/8.png" alt="8"></p>
+<ul>
+<li><code>log_bin_trust_function_creators</code> 검색</li>
+<li><code>1</code> 선택</li>
+<li>변경 사항 저장 클릭.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>DevOps</category>
+        <category>AWS</category>
+        <category>Database</category>
+        <category>RDS</category>
+        <category>Parameter Group</category>
+      </categories>
+      <tags>
+        <tag>Database</tag>
+        <tag>AWS</tag>
+        <tag>RDS</tag>
+        <tag>Parameter Group</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ELB - Http redirect Https</title>
+    <url>/2019/08/04/dev/devops/aws/computing/ec2/elb/http-redirect-https/elb-http-redirect-https/</url>
+    <content><![CDATA[<p>ELB에 <code>http</code> 요청이 들어올때 <code>https</code>로 redirect하는 설정입니다.</p>
+<hr>
+<h1 id="ELB-Create"><a href="#ELB-Create" class="headerlink" title="ELB - Create"></a>ELB - Create</h1><h2 id="편집하기"><a href="#편집하기" class="headerlink" title="편집하기"></a>편집하기</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/http-redirect-https/1.png" alt="1"></p>
+<ul>
+<li>해당 설정을 하려는 ELB 선택</li>
+<li><code>HTTP:80</code> 리스너 선택</li>
+<li><code>편집</code>클릭</li>
+</ul>
+<hr>
+<h2 id="기본-작업-제거"><a href="#기본-작업-제거" class="headerlink" title="기본 작업 제거"></a>기본 작업 제거</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/http-redirect-https/2.png" alt="2"></p>
+<ul>
+<li>기본으로 생성되어 있는 작업을 제거합니다.</li>
+</ul>
+<hr>
+<h2 id="작업-추가"><a href="#작업-추가" class="headerlink" title="작업 추가"></a>작업 추가</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/http-redirect-https/3.png" alt="3"></p>
+<ul>
+<li><code>작업추가</code>를 클릭.</li>
+<li><code>리디렉션 대상...</code> 선</li>
+</ul>
+<hr>
+<h2 id="Redirect-target-설정"><a href="#Redirect-target-설정" class="headerlink" title="Redirect target 설정"></a>Redirect target 설정</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/http-redirect-https/4.png" alt="4"></p>
+<ul>
+<li>설정<ul>
+<li>Protocol은 <code>HTTPS</code>, port는 <code>443</code></li>
+<li>기본 호스트 쿼리 경로 사용.</li>
+<li>301 - 영구 이동됨.</li>
+</ul>
+</li>
+<li><code>업데이트</code></li>
+</ul>
+<hr>
+<h2 id="수정-확인"><a href="#수정-확인" class="headerlink" title="수정 확인."></a>수정 확인.</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/http-redirect-https/5.png" alt="5"></p>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>DevOps</category>
+        <category>AWS</category>
+        <category>Computing</category>
+        <category>EC2</category>
+        <category>ELB</category>
       </categories>
       <tags>
         <tag>AWS</tag>
-        <tag>Network And Contents</tag>
-        <tag>VPC</tag>
-        <tag>Routing Table</tag>
+        <tag>EC2</tag>
+        <tag>ELB</tag>
+        <tag>Computing</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ELB - Create</title>
+    <url>/2019/08/04/dev/devops/aws/computing/ec2/elb/create/elb-create/</url>
+    <content><![CDATA[<p>Elastic Load Balancing의 약자로 시스템에 가해지는 부하를 여러대의 시스템으로 분산해서<br>규모있는 시스템을 만들 수 있도록 해주는 단일 진입점 입니다.<br>ELB를 만들어 봅시다.</p>
+<hr>
+<h1 id="ELB-Create"><a href="#ELB-Create" class="headerlink" title="ELB - Create"></a>ELB - Create</h1><h2 id="EC2-메뉴로-이동"><a href="#EC2-메뉴로-이동" class="headerlink" title="EC2 메뉴로 이동."></a>EC2 메뉴로 이동.</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/1.png" alt="1"></p>
+<hr>
+<h2 id="로드밸런서-메뉴로-이동"><a href="#로드밸런서-메뉴로-이동" class="headerlink" title="로드밸런서 메뉴로 이동"></a>로드밸런서 메뉴로 이동</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/2.png" alt="2"></p>
+<hr>
+<h2 id="로드-밸런서-생성"><a href="#로드-밸런서-생성" class="headerlink" title="로드 밸런서 생성"></a>로드 밸런서 생성</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/3.png" alt="3"></p>
+<hr>
+<h2 id="로드-밸런서-유형-선택"><a href="#로드-밸런서-유형-선택" class="headerlink" title="로드 밸런서 유형 선택"></a>로드 밸런서 유형 선택</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/4.png" alt="4"></p>
+<ul>
+<li>Application Load Balancer 선택</li>
+</ul>
+<hr>
+<h2 id="로드-밸런서-구성"><a href="#로드-밸런서-구성" class="headerlink" title="로드 밸런서 구성"></a>로드 밸런서 구성</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/5.png" alt="5"></p>
+<ul>
+<li>기본 구성 : 로드 밸런서 이름</li>
+<li>리스너 : http, https 를 사용하기 위한 구성</li>
+<li>가용영역</li>
+<li>해당 VPC 선택</li>
+<li>가용 영역 : 영역 및 public Subnet 선택</li>
+</ul>
+<hr>
+<h2 id="보안-설정-구성"><a href="#보안-설정-구성" class="headerlink" title="보안 설정 구성"></a>보안 설정 구성</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/6.png" alt="6"></p>
+<ul>
+<li>인증서 유형 : <code>ACM</code>에서 인증서 선택</li>
+<li>인증서 이름 : <code>Certificated Manager</code>에서 생성한 인증서 선택</li>
+</ul>
+<hr>
+<h2 id="보안-그룹-구성"><a href="#보안-그룹-구성" class="headerlink" title="보안 그룹 구성"></a>보안 그룹 구성</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/7.png" alt="7"></p>
+<ul>
+<li>보안 그룹 할당 : <code>새 보안 그룹 생성</code></li>
+<li>보안 그룹 이름 : 이름 할당</li>
+<li>프로토콜<ul>
+<li>HTTP 전용 80 추가</li>
+<li>HTTPS 전용 443 추가</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="라우팅-구성"><a href="#라우팅-구성" class="headerlink" title="라우팅 구성"></a>라우팅 구성</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/8.png" alt="8"></p>
+<ul>
+<li>대상 그룹 : <code>새 대상 그룹</code> (미리 생성해둔 대상 그룹이 있는 경우 <code>기존 보안 그룹 선택</code>)</li>
+<li>이름 : 이름 할당</li>
+</ul>
+<hr>
+<h2 id="대상-등록"><a href="#대상-등록" class="headerlink" title="대상 등록"></a>대상 등록</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/9.png" alt="9"></p>
+<ul>
+<li>인스턴스 항목에서 <code>Instance</code>를 선택하여 등록된 항목에 추가</li>
+</ul>
+<hr>
+<h2 id="검토"><a href="#검토" class="headerlink" title="검토"></a>검토</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/10.png" alt="10"></p>
+<ul>
+<li>생성한 값으로 되어있는지 확인.</li>
+<li><code>생성</code> 클릭.</li>
+</ul>
+<hr>
+<h2 id="로드-밸런서-생성-상태"><a href="#로드-밸런서-생성-상태" class="headerlink" title="로드 밸런서 생성 상태"></a>로드 밸런서 생성 상태</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/11.png" alt="11"></p>
+<hr>
+<h2 id="생성-결과-확인"><a href="#생성-결과-확인" class="headerlink" title="생성 결과 확인"></a>생성 결과 확인</h2><p><img data-src="/image/dev/devops/aws/computing/ec2/elb/create/12.png" alt="12"></p>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>DevOps</category>
+        <category>AWS</category>
+        <category>Computing</category>
+        <category>EC2</category>
+        <category>ELB</category>
+      </categories>
+      <tags>
+        <tag>AWS</tag>
+        <tag>EC2</tag>
+        <tag>ELB</tag>
+        <tag>Computing</tag>
       </tags>
   </entry>
   <entry>
@@ -2411,51 +2324,31 @@
       </tags>
   </entry>
   <entry>
-    <title>Routing Table - Relation Public Subnet</title>
-    <url>/2019/08/13/dev/devops/aws/network-contents/vpc/routing-table/relation/routing-table-relation-public-subnet/</url>
-    <content><![CDATA[<p>Public Subnet을 위한 Routing Table Relation 내용입니다.<br>Public Subnet 생성은 다음 Post를 확인하여 미리 생성을 해야 합니다.<br><a href="/2019/08/11/dev/infra/aws/network-contents/vpc/subnet/create/public-subnet-create/">Public Subnet - Create</a></p>
+    <title>Internet Gateway - Create</title>
+    <url>/2019/08/06/dev/devops/aws/network-contents/vpc/internet-gateway/create/internet-gateway-create/</url>
+    <content><![CDATA[<p>Internet Gateway는 수평 확장되고 가용성이 높은 중복 VPC 구성 요소 입니다<br>VPC의 인스턴스와 인터넷 간에 통신할 수 있게 해줌과 동시에 네트워크 트래픽에 가용성 위험이나 대역폭 제약 조건이 발생하지 않고.<br>IPv4 및 IPv6 트래픽을 지원합니다.<br>그리고 인터넷 라우팅 가능 트래픽에 대한 VPC 라우팅 테이블에 대상을 제공하고,<br>퍼블릭 IPv4 주소가 할당된 인스턴스에 대해 NAT(네트워크 주소 변환)를 수행하는 두 가지 목적이 있습니다.</p>
 <hr>
-<h1 id="Routing-Table-Relation-Public-Subnet"><a href="#Routing-Table-Relation-Public-Subnet" class="headerlink" title="Routing Table - Relation Public Subnet"></a>Routing Table - Relation Public Subnet</h1><p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/1.png" alt="1"></p>
+<h1 id="Routing-Table-Create"><a href="#Routing-Table-Create" class="headerlink" title="Routing Table - Create"></a>Routing Table - Create</h1><p><img data-src="/image/dev/devops/aws/network-contents/vpc/internet-gateway/create/1.png" alt="1"></p>
 <ul>
 <li><code>VPC</code> 메뉴 이동.</li>
 </ul>
 <hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/2.png" alt="2"></p>
+<p><img data-src="/image/dev/devops/aws/network-contents/vpc/internet-gateway/create/2.png" alt="2"></p>
 <ul>
-<li><code>라우팅 테이블</code> 메뉴 이동.</li>
-<li><code>public routing table</code> 선택.</li>
-<li><code>라우팅</code>탭 선택.</li>
-<li><code>편집</code>버튼 클릭.</li>
+<li><code>인터넷 게이트웨이</code> 메뉴 이동.</li>
+<li><code>인터넷 게이트웨이 생성</code> 클릭.</li>
 </ul>
 <hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/3.png" alt="3"></p>
+<p><img data-src="/image/dev/devops/aws/network-contents/vpc/internet-gateway/create/3.png" alt="3"></p>
 <ul>
-<li><code>다른 라우팅 추가</code>버튼 클릭.</li>
+<li>Name 태그 : 인터넷 게이트웨이 이름.</li>
+<li><code>생성</code> 클릭.</li>
 </ul>
 <hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/4.png" alt="4"></p>
+<p><img data-src="/image/dev/devops/aws/network-contents/vpc/internet-gateway/create/4.png" alt="4"></p>
 <ul>
-<li><code>대상 주소</code>를 입력 또는 선택.</li>
-<li><code>대상</code>을 입력 또는 선택.</li>
-<li><code>저장</code>버튼 클릭.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/5.png" alt="5"></p>
-<ul>
-<li><code>public routing table</code> 선택.</li>
-<li><code>서브넷 연결</code>탭으로 이동.</li>
-<li><code>편집</code>버튼 클릭.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/6.png" alt="6"></p>
-<ul>
-<li>할당 하려는 <code>public subnet</code>을 <code>check</code>.</li>
-<li><code>저장</code> 버튼 클릭.</li>
-</ul>
-<hr>
-<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/7.png" alt="7"></p>
-<ul>
-<li>서브넷 <code>저장 성공</code> 확인.</li>
+<li><code>인터넷 게이트웨이</code> 생성 요청 확인.</li>
+<li><code>닫기</code> 클릭.</li>
 </ul>
 ]]></content>
       <categories>
@@ -2464,13 +2357,13 @@
         <category>AWS</category>
         <category>Network And Contents</category>
         <category>VPC</category>
-        <category>Routing Table</category>
+        <category>Internet Gateway</category>
       </categories>
       <tags>
         <tag>AWS</tag>
         <tag>Network And Contents</tag>
         <tag>VPC</tag>
-        <tag>Routing Table</tag>
+        <tag>Internet Gateway</tag>
       </tags>
   </entry>
   <entry>
@@ -2579,6 +2472,50 @@
       </tags>
   </entry>
   <entry>
+    <title>Routing Table - Relation Private Subnet</title>
+    <url>/2019/08/12/dev/devops/aws/network-contents/vpc/routing-table/relation/routing-table-relation-private-subnet/</url>
+    <content><![CDATA[<p>Private Subnet을 위한 Routing Table Relation 내용입니다.<br>Private Subnet 생성은 다음 Post를 확인하여 미리 생성을 해야 합니다.<br><a href="/2019/08/11/dev/infra/aws/network-contents/vpc/subnet/create/private-subnet-create/">Private Subnet - Create</a></p>
+<hr>
+<h1 id="Routing-Table-Relation-Private-Subnet"><a href="#Routing-Table-Relation-Private-Subnet" class="headerlink" title="Routing Table - Relation Private Subnet"></a>Routing Table - Relation Private Subnet</h1><p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/private-subnet/1.png" alt="1"></p>
+<ul>
+<li><code>VPC</code> 메뉴 이동.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/private-subnet/2.png" alt="2"></p>
+<ul>
+<li><code>라우팅 테이블</code> 메뉴 이동.</li>
+<li><code>private routing table</code> 선택.</li>
+<li><code>서브넷 연결</code>탭으로 이동.</li>
+<li><code>편집</code>버튼 클릭.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/private-subnet/3.png" alt="3"></p>
+<ul>
+<li>할당 하려는 <code>private subnet</code>을 <code>check</code>.</li>
+<li><code>저장</code> 버튼 클릭.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/private-subnet/4.png" alt="4"></p>
+<ul>
+<li>서브넷 <code>저장 성공</code> 확인.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>DevOps</category>
+        <category>AWS</category>
+        <category>Network And Contents</category>
+        <category>VPC</category>
+        <category>Routing Table</category>
+      </categories>
+      <tags>
+        <tag>AWS</tag>
+        <tag>Network And Contents</tag>
+        <tag>VPC</tag>
+        <tag>Routing Table</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Private Subnet - Create</title>
     <url>/2019/08/11/dev/devops/aws/network-contents/vpc/subnet/create/private-subnet-create/</url>
     <content><![CDATA[<p>EC2 Instance를 연결 할 수 있는 VPC의 IP 주소 범위의 논리적 세그먼트이며<br>기본적으로 외부와 차단되어 있습니다.<br>Private Subnet내의 인스턴스들은 private ip만을 가지고 있으며 internet inbound/outbound가 불가능 하고 오직 다른 서브넷과의 연결만이 가능합니다.<br>결과적으로 인터넷 게이트웨이 라우팅 여부에 따라 틀리며 subnet 생성은 <code>Name 태그</code>가 다르며 생성 방법은 동일합니다.<br>그리고 2a, 2c 2개 가용영역의 subnet을 생성해봅시다.<br>사실상 public subnet 생성과 다른점은 단순 이름 외에는 없습니다.</p>
@@ -2643,6 +2580,69 @@
         <tag>Network And Contents</tag>
         <tag>VPC</tag>
         <tag>Subnet</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Routing Table - Relation Public Subnet</title>
+    <url>/2019/08/13/dev/devops/aws/network-contents/vpc/routing-table/relation/routing-table-relation-public-subnet/</url>
+    <content><![CDATA[<p>Public Subnet을 위한 Routing Table Relation 내용입니다.<br>Public Subnet 생성은 다음 Post를 확인하여 미리 생성을 해야 합니다.<br><a href="/2019/08/11/dev/infra/aws/network-contents/vpc/subnet/create/public-subnet-create/">Public Subnet - Create</a></p>
+<hr>
+<h1 id="Routing-Table-Relation-Public-Subnet"><a href="#Routing-Table-Relation-Public-Subnet" class="headerlink" title="Routing Table - Relation Public Subnet"></a>Routing Table - Relation Public Subnet</h1><p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/1.png" alt="1"></p>
+<ul>
+<li><code>VPC</code> 메뉴 이동.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/2.png" alt="2"></p>
+<ul>
+<li><code>라우팅 테이블</code> 메뉴 이동.</li>
+<li><code>public routing table</code> 선택.</li>
+<li><code>라우팅</code>탭 선택.</li>
+<li><code>편집</code>버튼 클릭.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/3.png" alt="3"></p>
+<ul>
+<li><code>다른 라우팅 추가</code>버튼 클릭.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/4.png" alt="4"></p>
+<ul>
+<li><code>대상 주소</code>를 입력 또는 선택.</li>
+<li><code>대상</code>을 입력 또는 선택.</li>
+<li><code>저장</code>버튼 클릭.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/5.png" alt="5"></p>
+<ul>
+<li><code>public routing table</code> 선택.</li>
+<li><code>서브넷 연결</code>탭으로 이동.</li>
+<li><code>편집</code>버튼 클릭.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/6.png" alt="6"></p>
+<ul>
+<li>할당 하려는 <code>public subnet</code>을 <code>check</code>.</li>
+<li><code>저장</code> 버튼 클릭.</li>
+</ul>
+<hr>
+<p><img data-src="/image/dev/devops/aws/network-contents/vpc/routing-table/relation/public-subnet/7.png" alt="7"></p>
+<ul>
+<li>서브넷 <code>저장 성공</code> 확인.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Dev</category>
+        <category>DevOps</category>
+        <category>AWS</category>
+        <category>Network And Contents</category>
+        <category>VPC</category>
+        <category>Routing Table</category>
+      </categories>
+      <tags>
+        <tag>AWS</tag>
+        <tag>Network And Contents</tag>
+        <tag>VPC</tag>
+        <tag>Routing Table</tag>
       </tags>
   </entry>
   <entry>
